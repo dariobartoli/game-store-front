@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
+import { Link } from 'react-router-dom'
 
 const Profile = () => {
   const [profile, setProfile] = useState(null)
@@ -8,7 +9,6 @@ const Profile = () => {
   const { token, setToken } = useAuth();
 
   useEffect(() => {
-    // Función para realizar la solicitud GET
     const profileData = async () => {
       try {
         const response = await axios.get("http://localhost:5353/users", {
@@ -34,10 +34,9 @@ const Profile = () => {
       }
     };
 
-    // Llama la función cuando el componente se monta
     profileData();
     publicationsData();
-  }, [token]); // La dependencia token asegura que la solicitud se realice cuando el token cambia
+  }, [token]);
   console.log(profile);
 
 
@@ -73,11 +72,10 @@ const Profile = () => {
               ))}
             </div>
           </div>})
-        ) : (
-          []
-        )
-        }
+        ) : ([])}
       </div>
+      <Link to={'wishlist'}>Wishlist</Link>
+
     </div>
   )
 }

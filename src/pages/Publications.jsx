@@ -33,7 +33,7 @@ const Publications = () => {
                 const nickNames = {};
                 for (const publication of publications) {
                     for (const comment of publication.comments) {
-                        if (!userNames[comment.user + "email"] || !nickNames[comment.user + "nick"]) {
+                        if (!userNames[comment.user] || !nickNames[comment.user]) {
                             try {
                             const response = await axios.get(`http://localhost:5353/users/user/${comment.user}`, {
                                 headers: {

@@ -24,20 +24,21 @@ const Store = () => {
 
 
   return (
-    <>
-        {games ? (
-        games.map((item) => {
-            return <Link to={`/store/${item._id}`}>
-                <div key={item._id}>
-                    <img src={item.coverImage} alt="" />
-                    <h2>{item.gameName}</h2>
-                    <p>$ {item.variant[0].price}</p>
-                </div>
-            </Link>
-        })
-        ) : (
-        []
-        )} 
+    <>  
+      <Link to={'/cart'}>Cart</Link>
+      {games ? (
+      games.map((item) => {
+          return <Link to={`/store/${item._id}`} key={item._id}>
+              <div>
+                  <img src={item.coverImage} alt="" />
+                  <h2>{item.gameName}</h2>
+                  <p>$ {item.variant[0].price}</p>
+              </div>
+          </Link>
+      })
+      ) : (
+      []
+      )} 
     </>
   )
 }

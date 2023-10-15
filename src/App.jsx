@@ -11,6 +11,8 @@ import Profile from "./pages/Profile";
 import Store from "./pages/Store";
 import Publications from "./pages/Publications";
 import Games from "./pages/Games";
+import Wishlist from "./pages/Wishlist";
+import Cart from "./pages/Cart";
 
 function App() {
 /*   axios
@@ -32,6 +34,8 @@ function App() {
           <Route path="/store" element={<Store/>}/>
           <Route path="/store/:id" element={<Games/>}/>
           <Route path="/posts" element={<Publications/>}/>
+          <Route path="/profile/wishlist" element={<Wishlist/>}/>
+          <Route path="/cart" element={<Cart/>}/>
         </Routes>
       </Router>
     </>
