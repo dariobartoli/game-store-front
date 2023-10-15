@@ -38,7 +38,7 @@ const Profile = () => {
     profileData();
     publicationsData();
   }, [token]); // La dependencia token asegura que la solicitud se realice cuando el token cambia
-  console.log(publications);
+  console.log(profile);
 
 
 
@@ -46,6 +46,7 @@ const Profile = () => {
     <div>
       {profile ? (
         <>
+          <img src={profile.profileImage}/>
           <p>Firstname: <span>{profile.firstName}</span></p>
           <p>Lastname: <span>{profile.lastName}</span></p>
           <p>email: <span>{profile.email}</span></p>
