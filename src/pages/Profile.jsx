@@ -54,7 +54,7 @@ const Profile = () => {
         <p>Loading...</p> // Muestra un mensaje de carga mientras se obtiene el perfil
       )}
       <div>
-        {publications ? (
+        {publications.length > 0 ? (
           publications.map((publication) => {return <div key={publication._id}>
             <p>{publication.title}</p>
             <div>
@@ -72,7 +72,7 @@ const Profile = () => {
               ))}
             </div>
           </div>})
-        ) : ([])}
+        ) : (<p>you don't have publications</p>)}
       </div>
       <Link to={'wishlist'}>Wishlist</Link>
 

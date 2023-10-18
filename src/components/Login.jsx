@@ -8,12 +8,14 @@ const Login = ({onClose}) => {
     const [emailOrNick, setEmailOrNick] = useState("")
     const [password, setPassword] = useState("")
     const { token, setToken } = useAuth();
+    const {isLogged, setIsLogged} = useAuth();
 
     
     const login = () => {
         axios.post('http://localhost:5353/auth/login', { emailOrNick, password })
         .then(response => {
           setToken(response.data.token)
+          setIsLogged(!isLogged)
           onClose()
   
           // Puedes redirigir al usuario a otra página después del inicio de sesión exitoso si es necesario

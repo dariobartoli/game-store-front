@@ -1,11 +1,6 @@
-import { useState } from "react";
 import "./App.css";
-import axios from "axios";
-import Login from "./components/Login";
 import Index from "./components/Index";
-
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route, useNavigate} from "react-router-dom"
 import NavBar from "./components/NavBar";
 import Profile from "./pages/Profile";
 import Store from "./pages/Store";
@@ -13,20 +8,20 @@ import Publications from "./pages/Publications";
 import Games from "./pages/Games";
 import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
+import { useAuth } from './context/AuthContext'
+import { useEffect } from "react";
 
 function App() {
-/*   axios
-    .get("http://localhost:5353/products")
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    }); */
+  const {isLogged, setIsLogged} = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(!isLogged){
+      navigate('/');
+    }
+  }, [isLogged]);
 
   return (
-    <>
-      <Router>
+      <div>
         <NavBar/>
         <Routes>
           <Route path="/" element={<Index/>}/>
@@ -37,8 +32,7 @@ function App() {
           <Route path="/profile/wishlist" element={<Wishlist/>}/>
           <Route path="/cart" element={<Cart/>}/>
         </Routes>
-      </Router>
-    </>
+      </div>
   );
 }
 

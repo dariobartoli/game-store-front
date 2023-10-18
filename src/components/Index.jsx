@@ -1,14 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
 import Login from './Login'
-import Profile from '../pages/Profile'
-import NavBar from './NavBar'
 import { useAuth } from '../context/AuthContext'
 
 const Index = () => {
     const [modal, setModal] = useState(false)
     //const [token, setToken] = useState(null)
     const { token, setToken } = useAuth();
+    const {isLogged, setIsLogged} = useAuth();
 
     const toggleModal = (authToken) => {
         setModal(!modal);
@@ -20,18 +19,11 @@ const Index = () => {
   return (
     <>
         <header>
-            {
-                token == null? 
-                <div>
-                    <p>Games</p>
-                    <button onClick={toggleModal}>Login</button>
-                </div> :
-                <div>
-                    <p>Games</p>
-                    <p>Profile</p>
-                    <p>Logout</p>
-                </div>
-            }
+            <div>
+                {
+                    !isLogged && <button onClick={toggleModal}>Login</button>
+                }
+            </div>
         </header>
         <main>
             <h1>Todo el catalogo de juegos</h1>
