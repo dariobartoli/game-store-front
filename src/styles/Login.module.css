@@ -1,0 +1,97 @@
+.modal__container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1.2rem;
+    background-color: tomato;
+    border-radius: 0.3rem;
+    padding: 10px;
+    width: 90vw;
+    max-width: 600px;
+    min-height: 270px;
+    border: 1px rgb(255, 139, 118) solid;
+}
+.login__container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 1.57rem;
+    align-items: center;
+}
+.input__container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+.login__input{
+    border: none;
+    height: 30px;
+    width: 200px;
+    padding: 0.5rem;
+    border-radius: 0.2rem;
+    background-color: #181818;
+    color: white;
+}
+
+.qr__container{
+    background-color: white;
+    padding: 0.6rem;
+    border-radius: 0.7rem;
+}
+.close__modal{
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.button__container{
+    display: flex;
+    gap: 0.8rem;
+}
+.button{
+    width: 80px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    border-radius: 0.3rem;
+}
+.button__login{
+    color: tomato;
+    font-weight: bold;
+    transition: 0.5s;
+}
+.button__login:hover{
+    color: white;
+    background-color: rgb(255, 138, 118);
+    transition: 0.5s;
+}
+.button__register{
+    background-color: rgb(20, 20, 20);
+    color: white;
+    transition: 0.5s;
+}
+.button__register:hover{
+    background-color: white;
+    color: tomato;
+    transition: 0.5s;
+}
+.forgot__password{
+    text-decoration: underline;
+    color: rgb(40, 40, 40);
+}
+
+@media (min-width: 769px){
+    .modal__container{
+        flex-direction: row;
+    }
+    .login__input{
+        width: 250px;
+    }
+}
+
+
+

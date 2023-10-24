@@ -1,0 +1,17 @@
+.logout__button{
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.2rem;
+    font-size: 1.1rem;
+    border: 2px tomato solid;
+    background-color: tomato;
+    color: white;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.logout__button:hover{
+    background-color: transparent;
+    color: tomato;
+    transition: 0.7s;
+}

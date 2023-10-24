@@ -1,0 +1,137 @@
+.navBar__module{
+    position: sticky;
+    top: 0px;
+    height: 7.5vh;
+    background-color: rgb(18, 18, 18);
+    z-index: 4;
+}
+
+.navBar__module > div{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.navBar__menu{
+    position: relative;
+    width: 100vw;
+    min-height: 200px;
+    padding: 4rem 2rem;
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    background-color: tomato;
+    top: 1.1vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    transition: 0.5s;
+}
+.show{
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transition: 0.5s;
+}
+.hambur__icon{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo__cel{
+    width: 60px;
+}
+.logo__desk{
+    width: 90px;
+    display: none;
+}
+
+.navBar__modal{
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.ancor{
+    text-decoration: none;
+    color: white;
+    font-size: 1.2rem;
+    border-bottom: 1px rgb(86, 86, 86) solid;
+    width: 100%;
+    text-align: center;
+}
+.active{
+    text-decoration: none;
+    color: black;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border-bottom: 1px rgb(86, 86, 86) solid;
+    width: 100%;
+    text-align: center;
+}
+
+.login__button{
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.2rem;
+    font-size: 1.1rem;
+    border: 2px tomato solid;
+    background-color: tomato;
+    color: white;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.login__button:hover{
+    background-color: transparent;
+    color: tomato;
+    transition: 0.7s;
+}
+
+
+
+
+
+
+@media (min-width: 769px){
+    .hambur__icon{
+        display: none;
+    }
+    .logo__desk{
+        display: block;
+    }
+
+    .navBar__container{
+        display: flex;
+    }
+    .navBar__menu{
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        width: auto;
+        flex-direction: row;
+        top: 0;
+        height: 80px;
+        background-color: transparent;
+        gap: 2rem;
+    }
+    .navBar__module{
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-around;
+        align-items: center;
+        height: 10vh;
+    }
+    .ancor{
+        text-decoration: none;
+        color: white;
+        font-size: 1.2rem;
+        border: none;
+    }
+    .active{
+        text-decoration: none;
+        color: tomato;
+        font-size: 1.4rem;
+        font-weight: bold;
+        text-decoration: underline 3px;
+        border-bottom: 1px tomato solid;
+    }
+}

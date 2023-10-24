@@ -1,0 +1,64 @@
+.modal__container{
+    background-color: tomato;
+    border-radius: 0.3rem;
+    padding: 1rem;
+    width: 90vw;
+    max-width: 400px;
+    min-height: 270px;
+    border: 1px rgb(255, 139, 118) solid;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.modal__container>h2{
+    align-self: center;
+    font-size: 1.5rem;
+    color: rgb(255, 255, 255);
+}
+.input__container{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.input__box{
+    width: 280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.input__box>input{
+    height: 27px;
+    background-color: #181818;
+    border: none;
+    border-radius: 0.2rem;
+    padding: 0.5rem;
+    color: white;
+}
+.button__register{
+    width: 160px;
+    height: 30px;
+    border: none;
+    font-weight: bold;
+    background-color: white;
+    color: tomato;
+    border-radius: 0.3rem;
+    align-self: center;
+    transition: 0.3s;
+}
+.button__register:hover{
+    background-color: #ff8a76;
+    transition: 0.3s;
+    color: white;
+}
+
+.close__modal{
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    cursor: pointer;
+}
