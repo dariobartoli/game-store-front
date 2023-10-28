@@ -39,7 +39,7 @@ const NavBar = () => {
         <div>
           <div className={styles.hambur__icon} onClick={()=> handleClick()}>
             <img src="./img/logo.png" alt="" className={styles.logo__cel}/>
-            <p>X</p>
+            <span className={`material-symbols-outlined ${styles.menu__icon}`}>menu</span>
           </div>
           <div>
             {isLogged && <Logout/>}

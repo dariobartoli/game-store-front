@@ -33,6 +33,8 @@
 .hambur__icon{
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-direction: row-reverse;
     gap: 0.5rem;
 }
 
@@ -87,10 +89,10 @@
     color: tomato;
     transition: 0.7s;
 }
-
-
-
-
+.menu__icon{
+    color: tomato;
+    scale: 1.4;
+}
 
 
 @media (min-width: 769px){
