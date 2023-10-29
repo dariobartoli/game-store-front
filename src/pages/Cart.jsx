@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 const Cart = () => {
     const [cartData, setCartData] = useState([])
     const [updateData, setUpdateData] = useState(false)
+    const [cartNumber, setCartNumber] = useState(localStorage.getItem('cart') || [])
     const { token, setToken } = useAuth();
 
     useEffect(() => {
@@ -37,6 +38,9 @@ const Cart = () => {
                 }
             })
             setUpdateData(!updateData)
+            const updateCart = parseInt(cartNumber) - 1
+            localStorage.setItem('cart', updateCart)
+            setCartNumber(updateCart)
         } catch (error) {
             console.error('Error:', error.message);
         }
@@ -50,6 +54,7 @@ const Cart = () => {
                 }
             })
             setUpdateData(!updateData)
+            localStorage.removeItem('cart')
         } catch (error) {
             console.error('Error:', error.message);
         }
@@ -62,8 +67,8 @@ const Cart = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            console.log(response.data);
             setUpdateData(!updateData)
+            localStorage.removeItem('cart')
         } catch (error) {
             console.error('Error:', error.message);
         }

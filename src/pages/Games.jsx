@@ -4,15 +4,17 @@ import { useParams, Link } from "react-router-dom";
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import styles from '../styles/Games.module.css'
-import Carousel from '../components/Carousel';
+import Carousel from '../components/Carousel'
 
 
 const Games = () => {
     const [game, setGame] = useState([])
     const [reviews, setReviews] = useState([])
     const { id } = useParams();
-    const { token, setToken } = useAuth();
-    
+    const { token, setToken, userId} = useAuth();
+    const [users, setUsers] = useState([]);
+    const [cartNumber, setCartNumber] = useState(localStorage.getItem('cart') || 0)
+
     useEffect(() => {
         const gameData = async () => {
             try {
@@ -38,7 +40,6 @@ const Games = () => {
     }, [game])
     
     
-    
     const addWishlist = async(id) => {
         try {
             const response = await axios.post('http://localhost:5353/wishlist', {id}, {
@@ -57,16 +58,45 @@ const Games = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            console.log(response.data);
+            const updateCart = parseInt(cartNumber) + 1
+            setCartNumber(updateCart)
+            localStorage.setItem('cart', updateCart)
+            alert(response.data.message)
         } catch (error) {
-            console.error('Error:', error.message);
+            console.error('Error:', error);
+            alert(error.response.data.message)
         }
     }
+
+    useEffect(() => {
+        const userInfo = async(userId) => {
+            try {
+                const response = await axios(`http://localhost:5353/users/user/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                return response.data.user
+            } catch (error) {
+                console.error('Error', error);
+            }
+        }
+        const promises = reviews.map(item => userInfo(item.userId));
+
+        Promise.all(promises)
+            .then(usersData => {
+                setUsers(usersData)
+            })
+            .catch(error => {
+                console.error('Error', error);
+            })
+    }, [reviews])
+    
 
   return (
     <div className={styles.games__container}>
         <div className={styles.main__container}>
-            <Link to={'/cart'} className={styles.cart}><span className="material-symbols-outlined">shopping_cart</span></Link>
+            <Link to={'/cart'} className={styles.cart__icon}><span className={`material-symbols-outlined ${styles.cart}`}>shopping_cart</span><p>{cartNumber}</p></Link>
             <div className={styles.games__box}>
                 {game ? (
                     <div>
@@ -113,10 +143,14 @@ const Games = () => {
                             {reviews.length > 0 ? reviews.map((item, index) => (
                                     <div key={index} className={styles.review__box}>
                                         <div>
-                                            <div>
-                                                <img src={item.image} alt="" className={styles.review__image}/>
-                                                <p>{item.nick}</p>
-                                            </div>
+                                            <Link to={userId == item.userId ? "/profile" : `/user/${item.userId}`} >
+                                                {users.filter(user => user._id === item.userId).map(user => (
+                                                    <div key={user._id} className={styles.review__head}>
+                                                        <img src={user.profileImage} alt="" className={styles.review__image}/>
+                                                        <p>{user.nickName}</p>
+                                                    </div>
+                                                ))}
+                                            </Link>
                                             {item.recommended == true?<div className={styles.review__recommended}>
                                                 <span className="material-symbols-outlined">thumb_up</span>
                                                 <p>Recommended</p>

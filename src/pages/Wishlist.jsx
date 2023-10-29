@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
+import styles from '../styles/Wishlist.module.css'
 
 const Wishlist = () => {
     const [wishlistData, setWishlistData] = useState([])
@@ -40,19 +41,23 @@ const Wishlist = () => {
     
     console.log(wishlistData);
   return (
-    <div>
-        {
-            wishlistData ? (wishlistData.map((item) => {
-                return <div key={item._id}>
-                    <img src={item.coverImage} alt="" />
-                    <p>{item.gameName}</p>
-                    <p>{item.variant[0].price}</p>
-                    <p>{item._id}</p>
-                    <Link to={`/store/${item._id}`}>see</Link>
-                    <button onClick={() => removeToWishlist(item._id)}>X</button>
-                </div>
-            })) : ([])
-        }
+    <div className={styles.wishlist__container}>
+        <div className={styles.main__container}>
+            { wishlistData.length>0 ? (wishlistData.map((item) => {
+                    return <div key={item._id} className={styles.wishlist__card}>
+                        <img src={item.coverImage} alt="" className={styles.wishlist__image}/>
+                        <div className={styles.card__container}>
+                            <h4>{item.gameName}</h4>
+                            <p>${item.variant[0].price}</p>
+                            <div>
+                                <Link to={`/store/${item._id}`}><span class={`material-symbols-outlined ${styles.span}`}>feature_search</span></Link>
+                                <span  class="material-symbols-outlined" onClick={() => removeToWishlist(item._id)}>delete</span>
+                            </div>
+                        </div>
+                    </div>
+                })) : (<p>You don't have any game in your wishlist</p>)
+            }
+        </div>
     </div>
   )
 }

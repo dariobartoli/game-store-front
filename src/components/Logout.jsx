@@ -17,6 +17,9 @@ const Logout = () => {
             })
             localStorage.removeItem("token");
             localStorage.removeItem("logged");
+            localStorage.removeItem("userId");
+            localStorage.removeItem("deletedRequests")
+            localStorage.removeItem('cart')
             navigate('/')
             window.location.reload()
         } catch (error) {

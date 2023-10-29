@@ -1,0 +1,164 @@
+.profile__container{
+    background-color: rgb(0, 0, 0);
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    color: white;
+}
+
+.main__container{
+    width: 90%;
+    background-image: linear-gradient(to bottom, #1a1a1a, #151515, #101010, #080808, #000000);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 3rem 5rem 2rem 5rem;
+    position: relative;
+    gap: 0.5rem;
+}
+
+.profile__data{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profile__image{
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 0.5rem 0.5rem 0 0;
+    border-bottom: tomato solid 2px;
+}
+
+.profile__card{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    gap: 2rem;
+    border: 1px rgb(82, 82, 82) solid;
+    padding-bottom: 2rem;
+    border-radius: 0.5rem;
+}
+
+.text__container{
+    padding-left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.text__container>p{
+    color: tomato;
+    font-size: 1.3rem;
+}
+
+.text__container>p>span{
+    color: white;
+    font-size: 1.1rem;
+}
+.request__div{
+    position: relative;
+}
+.request__div2{
+    padding-top: 0.8rem;
+    position: relative;
+}
+.request__div3{
+    background-color: tomato;
+    width: 40px;
+    height: 40px;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    border-radius: 0.2rem;
+    z-index: 0;
+}
+.request__container{
+    position: relative;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    width: 255px;
+    min-height: 48px;
+    border-radius: 0.7rem;
+    background-color: tomato;
+    border-bottom: 2px solid rgb(255, 64, 31);
+    border-right: 2px solid rgb(255, 64, 31);
+    border-left: 2px solid rgb(255, 64, 31);
+    z-index: 4;
+}
+.request__card{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 250px;
+    padding: 0.5rem;
+    z-index: 4;
+    border-bottom: 1px solid rgb(252, 44, 7);
+}
+
+.request__card>div{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.request__image{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    z-index: 4;
+}
+.request__accept{
+    color: rgb(23, 132, 23);
+    cursor: pointer;
+}
+.request__deny{
+    color: rgb(255, 53, 53);
+    cursor: pointer;
+}
+.request__button{
+    width: 150px;
+    height: 25px;
+    cursor: pointer;
+    border-radius: 0.3rem;
+    border: none;
+    color: tomato;
+    font-weight: bold;
+    transition: 0.5s;
+    font-size: 0.8rem;
+}
+.request__button:hover{
+    background-color: tomato;
+    color: white;
+    transition: 0.5s;
+}
+.request__button>span{
+    color: black;
+    text-decoration: underline black;
+}
+.request__text{
+    font-size: 1.1rem;
+    text-align: center;
+    padding-top: 0.2rem;
+}
+
+@media (min-width: 769px){
+    .profile__card{
+        flex-direction: row;
+        padding: 0 2rem 2rem 0;
+        width: 600px;
+    }
+    .text__container{
+        padding-left: 0;
+        padding-top: 0.5rem;
+    }
+    .profile__image{
+        border-radius: 0.5rem 0 0.5rem 0;
+        border-right: tomato solid 2px;
+    }
+    
+}

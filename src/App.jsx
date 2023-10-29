@@ -16,6 +16,7 @@ import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
 import { useAuth } from "./context/AuthContext";
 import { useEffect } from "react";
+import UsersPage from "./pages/UsersPage";
 
 function App() {
   const { isLogged, setIsLogged } = useAuth();
@@ -33,6 +34,9 @@ function App() {
         // El token ha expirado, redirige al usuario a la página de inicio de sesión
         localStorage.removeItem("token"); // Eliminar el token caducado
         localStorage.removeItem("logged");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("deletedRequests")
+        localStorage.removeItem('cart')
         window.location.href = "/"; // Redirigir al inicio de sesión
       }
     }
@@ -63,7 +67,8 @@ function App() {
         <Route path="/store/:id" element={<Games />} />
         <Route path="/posts" element={<Publications />} />
         <Route path="/profile/wishlist" element={<Wishlist />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/cart" element={<Cart/>} />
+        <Route path="/user/:id" element={<UsersPage/>}/>
       </Routes>
     </div>
   );

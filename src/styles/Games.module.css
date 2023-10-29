@@ -63,13 +63,27 @@
     color: tomato;
     font-size: 1.2rem;
 }
-
-.cart{
-    color: tomato;
-    scale: 1.3;
+.cart__icon{
     position: absolute;
     top: 10px;
     right: 15px;
+}
+.cart{
+    color: tomato;
+    scale: 1.3;
+}
+.cart__icon>p{
+    background-color: white;
+    color: tomato;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: absolute;
+    top: 16px;
+    right: -7px;
 }
 .button__cart{
     width: 120px;
@@ -142,9 +156,16 @@
     gap: 0.5rem;
     align-items: center;
 }
+.review__head{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
 .review__image{
     width: 40px;
+    height: 40px;
     border-radius: 50%;
+    object-fit: cover;
 }
 .review__recommended{
     background-image: linear-gradient(to right, #00aa3ca2, #08b94394, #11c84e7f, #17d75767, #1ce7635f);
@@ -217,7 +238,7 @@
     .games__box{
         width: 90%;
     }
-    .cart{
+    .cart__icon{
         top: 20px;
         right: 35px;
     }

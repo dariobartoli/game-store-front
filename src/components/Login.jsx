@@ -11,6 +11,7 @@ const Login = ({onClose}) => {
     const [password, setPassword] = useState("")
     const { token, setToken } = useAuth();
     const {isLogged, setIsLogged} = useAuth();
+    const {userId, setUserId} = useAuth();
 
     
     const login = () => {
@@ -20,6 +21,8 @@ const Login = ({onClose}) => {
           localStorage.setItem('token', response.data.token);
           setIsLogged(!isLogged)
           localStorage.setItem('logged', true)
+          setUserId(response.data.userId)
+          localStorage.setItem('userId', response.data.userId);
           onClose()
           // Puedes redirigir al usuario a otra página después del inicio de sesión exitoso si es necesario
           // Por ejemplo, window.location.href = '/dashboard';
@@ -52,7 +55,7 @@ const Login = ({onClose}) => {
         <div className={styles.qr__container}>
           <img src="./img/qr.png" alt="" className={styles.qr}/>
         </div>
-        <div className={styles.close__modal} onClick={() => onClose()}><span class="material-symbols-outlined">close</span></div>
+        <div className={styles.close__modal} onClick={() => onClose()}><span className="material-symbols-outlined">close</span></div>
       </div>
     </div>
   )
