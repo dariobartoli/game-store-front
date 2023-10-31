@@ -17,6 +17,7 @@ import Cart from "./pages/Cart";
 import { useAuth } from "./context/AuthContext";
 import { useEffect } from "react";
 import UsersPage from "./pages/UsersPage";
+import Library from "./pages/Library";
 
 function App() {
   const { isLogged, setIsLogged } = useAuth();
@@ -68,6 +69,7 @@ function App() {
         <Route path="/profile/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart/>} />
         <Route path="/user/:id" element={<UsersPage/>}/>
+        <Route path="/library" element={<Library/>}/>
       </Routes>
     </div>
   );
