@@ -36,7 +36,6 @@ function App() {
         localStorage.removeItem("logged");
         localStorage.removeItem("userId");
         localStorage.removeItem("deletedRequests")
-        localStorage.removeItem('cart')
         window.location.href = "/"; // Redirigir al inicio de sesión
       }
     }

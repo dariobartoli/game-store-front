@@ -8,7 +8,7 @@ import styles from '../styles/Wishlist.module.css'
 const Wishlist = () => {
     const [wishlistData, setWishlistData] = useState([])
     const [updateWishlist, setUpdateWishlist] = useState(false)
-    const { token, setToken } = useAuth();
+    const { token, setToken, wishlistNumber, setWishlistNumber } = useAuth();
 
     useEffect(() => {
         const wishlistGetData = async() => {
@@ -34,6 +34,8 @@ const Wishlist = () => {
                 }
             })
             setUpdateWishlist(!updateWishlist)
+            const updateData = parseInt(wishlistNumber) - 1
+            setWishlistNumber(updateData)
         } catch (error) {
             console.error('Error:', error.message);
         }
@@ -43,6 +45,7 @@ const Wishlist = () => {
   return (
     <div className={styles.wishlist__container}>
         <div className={styles.main__container}>
+            <h2>Wishlist</h2>
             { wishlistData.length>0 ? (wishlistData.map((item) => {
                     return <div key={item._id} className={styles.wishlist__card}>
                         <img src={item.coverImage} alt="" className={styles.wishlist__image}/>

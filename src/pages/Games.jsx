@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from "react";
+import { useState, useEffect, Component } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
@@ -10,34 +10,33 @@ import Carousel from '../components/Carousel'
 const Games = () => {
     const [game, setGame] = useState([])
     const [reviews, setReviews] = useState([])
+    const [reviewModal, setReviewModal] = useState(false)
+    const [reviewText, setReviewText] = useState("")
+    const [reviewRecommended, setReviewRecommended] = useState(true)
     const { id } = useParams();
     const { token, setToken, userId} = useAuth();
     const [users, setUsers] = useState([]);
-    const [cartNumber, setCartNumber] = useState(localStorage.getItem('cart') || 0)
+    const {cartNumber, setCartNumber, wishlistNumber, setWishlistNumber} = useAuth();
 
     useEffect(() => {
-        const gameData = async () => {
+        const fetchData = async () => {
             try {
-              const response = await axios.get(`http://localhost:5353/products/product/${id}`);
-              setGame(response.data.product);
-            } catch (error) {
-              console.error('Error:', error);
-            }
-          };
-        gameData()
-    }, [])
-
-    useEffect(() => {
-        const allReviews = async() => {
-            try {
-                const response = await axios.get(`http://localhost:5353/reviews/${game._id}`)
-                setReviews(response.data.reviews)
+                // Realiza la solicitud para obtener la información del juego
+                const gameResponse = await axios.get(`http://localhost:5353/products/product/${id}`);
+                setGame(gameResponse.data.product);
+    
+                // Luego de obtener la información del juego, realiza la solicitud para obtener las revisiones
+                const reviewsResponse = await axios.get(`http://localhost:5353/reviews/${gameResponse.data.product._id}`);
+                setReviews(reviewsResponse.data.reviews);
             } catch (error) {
                 console.error('Error:', error);
             }
+        };
+        // Llama a fetchData() solo si 'id' existe, para evitar solicitudes innecesarias.
+        if (id) {
+            fetchData();
         }
-        allReviews()
-    }, [game])
+    }, [id, reviewModal]);
     
     
     const addWishlist = async(id) => {
@@ -47,8 +46,12 @@ const Games = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
+            const updateData = parseInt(wishlistNumber) + 1
+            setWishlistNumber(updateData)
+            alert(response.data.message)
         } catch (error) {
             console.error('Error:', error);
+            alert(error.response.data.message)
         }
     }
     const addToCart = async(id, variant) => {
@@ -60,7 +63,6 @@ const Games = () => {
             })
             const updateCart = parseInt(cartNumber) + 1
             setCartNumber(updateCart)
-            localStorage.setItem('cart', updateCart)
             alert(response.data.message)
         } catch (error) {
             console.error('Error:', error);
@@ -91,19 +93,37 @@ const Games = () => {
                 console.error('Error', error);
             })
     }, [reviews])
-    
+
+    const addReview = async(id)=> {
+        try {
+            const response = await axios.post('http://localhost:5353/reviews', {id:id, text:reviewText, recommended:reviewRecommended}, {
+                headers:{
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            setReviewModal(!reviewModal)
+            alert(response.data.message)
+        } catch (error) {
+            console.error('Error', error);
+            alert(error.response.data.message)
+        }
+    }
+
 
   return (
     <div className={styles.games__container}>
         <div className={styles.main__container}>
-            <Link to={'/cart'} className={styles.cart__icon}><span className={`material-symbols-outlined ${styles.cart}`}>shopping_cart</span><p>{cartNumber}</p></Link>
+            <div className={styles.cart__wish__contain}>
+                <Link to={'/cart'} className={styles.cart__icon}><span className={`material-symbols-outlined ${styles.cart}`}>shopping_cart</span><p>{cartNumber}</p></Link>
+                <Link to={'/profile/wishlist'} className={styles.wishlistNum}>Wishlist<span>({wishlistNumber})</span></Link>
+            </div>
             <div className={styles.games__box}>
                 {game ? (
                     <div>
                         <div className={styles.head__contain}>
                             <img src={game.coverImage} className={styles.cover__image}/>
                             <div className={styles.info__contain}>
-                                <h2>{game.gameName}</h2>
+                                <h2 className={styles.game__title}>{game.gameName}</h2>
                                 <section>
                                     <h4>Category:</h4>
                                     {game.category ? (game.category.map((item) => {
@@ -137,7 +157,7 @@ const Games = () => {
                         </div>
                         <div className={styles.review__title__container}>
                             <h2 className={styles.subtitles}>Reviews:</h2>
-                            <button className={styles.button__review}>Add Review</button>
+                            <button className={styles.button__review} onClick={()=> setReviewModal(!reviewModal)}>Add Review</button>
                         </div>
                         <div className={styles.review__container}>
                             {reviews.length > 0 ? reviews.map((item, index) => (
@@ -166,6 +186,17 @@ const Games = () => {
                         </div>
                     </div>
                 ) : ([])}
+            </div>
+            <div className={`${styles.review__modal} ${reviewModal? styles.review__modal__view : ""}`}>
+                <span className="material-symbols-outlined" onClick={()=> setReviewModal(!reviewModal)}>close</span>
+                <textarea name="review" id="review" cols="30" rows="12" className={styles.review__textarea} defaultValue={"Write your review here..."} onChange={e => setReviewText(e.target.value)}></textarea>
+                <div>
+                    <select name="recommended" id="recommended" className={styles.review__select} onChange={e => setReviewRecommended(e.target.value)}>
+                        <option value={true}>Recommended</option>
+                        <option value={false}>Not Recommended</option>
+                    </select>
+                    <button onClick={()=>addReview(game._id)}>Add review</button>
+                </div>
             </div>
 
         </div>

@@ -48,6 +48,9 @@
     font-size: 1.5rem;
     cursor: pointer;
 }
+.close__modal:hover{
+    color: #3b3b3b;
+}
 .button__container{
     display: flex;
     gap: 0.8rem;

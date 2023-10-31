@@ -40,6 +40,7 @@
     border: 1px rgb(82, 82, 82) solid;
     padding-bottom: 2rem;
     border-radius: 0.5rem;
+    position: relative;
 }
 
 .text__container{
@@ -145,7 +146,83 @@
     text-align: center;
     padding-top: 0.2rem;
 }
-
+.edit__icon{
+    position: absolute;
+    top: 255px;
+    right: 5px;
+    color: tomato;
+    cursor: pointer;
+}
+.edit__icon:hover{
+    color: #ff846e;
+}
+.edit__modal{
+    position: relative;
+    background-color: tomato;
+    border: 2px solid rgb(255, 62, 28);
+    border-radius: 0.3rem;
+    width: 90%;
+    max-width: 350px;
+    height: 250px;
+    position: fixed;
+    top: 30%;
+    right: 50%;
+    transform: translate(50%, -200%);
+    transition: 0.7s;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.6rem;
+    z-index: 2;
+}
+.edit__modal>p{
+    font-size: 1.2rem;
+}
+.edit__modal>span{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    color: black;
+}
+.edit__modal>span:hover{
+    color: #3b3b3b;
+}
+.edit__view__modal{
+    transform: translate(50%, 0%);
+    transition: 0.7s;
+}
+.edit__form{
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.edit__form>input{
+    border: none;
+    height: 25px;
+    border-radius: 0.2rem;
+    border: 1px rgb(171, 171, 171) solid;
+    padding: 1px;
+}
+.edit__form>button{
+    margin-top: 3px;
+    height: 27px;
+    border: none;
+    background-color: white;
+    border-radius: 0.3rem;
+    color: tomato;
+    font-weight: bold;
+    border: 1px rgb(170, 170, 170) solid;
+    font-size: 1.05rem;
+    transition: 0.4s;
+    cursor: pointer;
+}
+.edit__form>button:hover{
+    border-color: tomato;
+    background-color: rgb(255, 121, 98);
+    color: white;
+    transition: 0.4s;
+}
 @media (min-width: 769px){
     .profile__card{
         flex-direction: row;
@@ -160,5 +237,11 @@
         border-radius: 0.5rem 0 0.5rem 0;
         border-right: tomato solid 2px;
     }
-    
+    .edit__icon{
+        top: 5px;
+        right: 10px;
+    }
+    .edit__modal{
+        height: 230px;
+    }
 }

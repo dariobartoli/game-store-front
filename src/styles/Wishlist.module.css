@@ -17,6 +17,10 @@
     position: relative;
     gap: 0.5rem;
 }
+.main__container>h2{
+    padding-bottom: 1rem;
+    font-size: 2.5rem;
+}
 
 .wishlist__card{
     width: 100%;
@@ -51,12 +55,18 @@
 }
 
 .card__container>div>span{
-    color: rgb(255, 75, 75);
+    color: #ff4b4b;
     cursor: pointer;
+}
+.card__container>div>span:hover{
+    color: #ff5c5c;
 }
 
 .span{
     color: tomato;
+}
+.span:hover{
+    color: rgb(255, 118, 94);
 }
 
 @media (min-width: 769px){

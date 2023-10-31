@@ -40,10 +40,12 @@
 
 .logo__cel{
     width: 60px;
+    filter: hue-rotate(346deg);
 }
 .logo__desk{
     width: 90px;
     display: none;
+    filter: hue-rotate(346deg);
 }
 
 .navBar__modal{

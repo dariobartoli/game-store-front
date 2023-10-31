@@ -1,0 +1,119 @@
+.cart__container{
+    display: flex;
+    justify-content: center;
+    background-color: rgb(0, 0, 0);
+    min-height: 90vh;
+}
+
+.main__container{
+    width: 90%;
+    background-image: linear-gradient(to bottom, #1a1a1a, #151515, #101010, #080808, #000000);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 4rem 5rem 2rem 5rem;
+    position: relative;
+}
+
+.title{
+    color: white;
+}
+
+.cart__image{
+    width: 150px;
+    height: 80px;
+    object-fit: fill;
+    border-radius: 0.1rem;
+}
+
+.cart__box{
+    width: 260px;
+    background-color: tomato;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.cart__card{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-bottom: 1px rgb(91, 91, 91) solid;
+}
+.cart__card__div{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.cart__card__div>p{
+    font-weight: bold;
+}
+.cart__card__div>span{
+    color: rgb(255, 34, 34);
+    padding-bottom: 0.5rem;
+    cursor: pointer;
+}
+.cart__card__div>span:hover{
+    color: #ff4b4b;
+}
+.cart__total__box{
+    padding-top: 0.5rem;
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.cart__total{
+    font-weight: bold;
+    font-size: 1.4rem;
+    text-align: end;
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 87, 58);
+    border-radius: 0.3rem;
+    padding: 2px;
+}
+.cart__total__box>div{
+    display: flex;
+    gap: 2rem;
+}
+.cart__total__box>div>button{
+    width: 100px;
+    height: 30px;
+    border: none;
+    font-weight: bold;
+    border-radius: 0.3rem;
+    border: 1px solid rgb(160, 160, 160);
+    transition: 0.3s;
+    cursor: pointer;
+}
+.cart__button__clean:hover{
+    border-color: #ff4b4b;
+    background-color: #ff4b4b;
+    transition: 0.3s;
+}
+.cart__button__buy:hover{
+    border-color: rgb(255, 117, 93);
+    background-color: rgb(255, 117, 93);
+    transition: 0.3s;
+}
+.cart__empty{
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+@media (min-width: 769px){
+    .cart__box{
+        width: 600px;
+    }
+    .cart__card{
+        flex-direction: row;
+    }
+    .cart__card__div{
+        flex-direction: column;
+    }
+}

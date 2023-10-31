@@ -62,3 +62,6 @@
     right: 5px;
     cursor: pointer;
 }
+.close__modal:hover{
+    color: #3b3b3b;
+}

@@ -11,6 +11,12 @@ const Profile = () => {
   const [viewRequest, setViewRequest] = useState(false)
   const [deletedRequests, setDeletedRequests] = useState(JSON.parse(localStorage.getItem('deletedRequests')) || [])
   const { token, setToken } = useAuth();
+  const [editModal, setEditModal] = useState(false)
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [nickName, setNickName] = useState("")
+  const [password, setPassword] = useState("")
+  const [image, setImage] = useState("")
 
   useEffect(() => {
     const profileData = async () => {
@@ -22,7 +28,7 @@ const Profile = () => {
         });
         setProfile(response.data.user);
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error.response.data.message);
       }
     };
 /*     const publicationsData = async () => {
@@ -68,7 +74,7 @@ const Profile = () => {
   
 
     }
-  }, [profile])
+  }, [profile, nickName, editModal])
 
   const responseRequest = async(id, bool) => {
     try {
@@ -86,6 +92,24 @@ const Profile = () => {
     }
   } 
 
+  const updateProfileData = async(e) => {
+    e.preventDefault()
+    try {
+      const response = await axios.put('http://localhost:5353/users', {imagen:image, firstName:firstName, lastName:lastName, password:password, nickName:nickName}, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+      alert(response.data.message)
+      setProfile(response.data.user);
+      setEditModal(!editModal)
+    } catch (error) {
+      console.error('Error', error);
+      alert(error.response.data.message)
+    }
+  }
+
 
 
   return (
@@ -102,6 +126,7 @@ const Profile = () => {
                 <p>Nick: <span>{profile.nickName}</span></p>
                 <p>Wallet: <span>${profile.wallet}</span></p>
               </div>
+              <span className={`material-symbols-outlined ${styles.edit__icon}`} onClick={()=> setEditModal(!editModal)}> edit</span>
             </div>
           ) : (<p>Loading...</p>)} {/* Muestra un mensaje de carga mientras se obtiene el perfil */}
           <div className={styles.request__div}>
@@ -116,7 +141,7 @@ const Profile = () => {
                       <p>{data.nickName}</p>
                     </div>
                     <div>
-                      <span className={`material-symbols-outlined ${styles.request__accept}`}>check</span>
+                      <span className={`material-symbols-outlined ${styles.request__accept}`} onClick={() => responseRequest(data._id, true)}>check</span>
                       <span className={`material-symbols-outlined ${styles.request__deny}`} onClick={() => responseRequest(data._id, false)}>cancel</span>
                     </div>
                   </div>
@@ -124,6 +149,14 @@ const Profile = () => {
               </div> : ""}
             </div>
           </div>
+
+          <div>
+            <p>Friends:</p>
+            {profile ?profile.friends.map(item => (
+              <div key={item}>{item}</div>
+            )): (<p>Loading...</p>)}
+          </div>
+
           <div>
             {publications.length > 0 ? (
               publications.map((publication) => {return <div key={publication._id}>
@@ -146,6 +179,20 @@ const Profile = () => {
             ) : (<p>you don't have publications</p>)}
           </div>
           <Link to={'wishlist'}>Wishlist</Link>
+        </div>
+
+
+        <div className={`${styles.edit__modal} ${editModal? styles.edit__view__modal: ""}`}>
+          <span className={`material-symbols-outlined`} onClick={()=> setEditModal(!editModal)}>close</span>
+          <p>Modify where you want changes:</p>
+          <form id="imageForm" encType="multipart/form-data" onSubmit={updateProfileData} className={styles.edit__form}>
+            <input type="text" placeholder='Change first name' onChange={e => setFirstName(e.target.value)}/>
+            <input type="text" placeholder='Change last name' onChange={e => setLastName(e.target.value)}/>
+            <input type="password" placeholder='Change password' onChange={e => setPassword(e.target.value)}/>
+            <input type="text" placeholder='Change nickname' onChange={e => setNickName(e.target.value)}/>
+            <input type="file" name="" id="fileInput" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
+            <button type='submit'>Update</button>
+          </form>
         </div>
       </div>
     </div>

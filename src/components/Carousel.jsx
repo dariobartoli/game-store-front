@@ -16,7 +16,7 @@ const Carousel = ({ images }) => {
     slidesToScroll: 1,
     initialSlide: 0,
     autoplay: true,
-    speed: 1200,
+    speed: 400,
     autoplaySpeed: 5000,
     cssEase: "linear",
     pauseOnHover: true

@@ -7,7 +7,7 @@ import styles from '../styles/Store.module.css'
 
 const Store = () => {
     const [games, setGames] = useState([])
-    const [cartNumber, setCartNumber] = useState(localStorage.getItem('cart') || 0)
+    const {cartNumber, setCartNumber, wishlistNumber} = useAuth();
 
     useEffect(() => {
         const gamesData = async () => {
@@ -24,7 +24,10 @@ const Store = () => {
   return (
     <div className={styles.store__container}>
       <div className={styles.main__container}>
-        <Link to={'/cart'} className={styles.cart__icon}><span className={`material-symbols-outlined ${styles.cart}`}>shopping_cart</span><p>{cartNumber}</p></Link>
+        <div className={styles.cart__wish__contain}>
+          <Link to={'/cart'} className={styles.cart__icon}><span className={`material-symbols-outlined ${styles.cart}`}>shopping_cart</span><p>{cartNumber}</p></Link>
+          <Link to={'/profile/wishlist'} className={styles.wishlistNum}>Wishlist<span>({wishlistNumber})</span></Link>
+        </div>
         <div className={styles.games__container}>
           {games ? (
           games.map((item) => {
@@ -35,7 +38,6 @@ const Store = () => {
                         <div className={styles.cover__div}></div>
                       </div>
                       <div className={styles.text__container}>
-                        <h2>{item.gameName}</h2>
                         <p>$ {item.variant[0].price}</p>
                       </div>
                   </div>
