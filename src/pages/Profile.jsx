@@ -10,13 +10,15 @@ const Profile = () => {
   const [requests, setRequests] = useState([])
   const [viewRequest, setViewRequest] = useState(false)
   const [deletedRequests, setDeletedRequests] = useState(JSON.parse(localStorage.getItem('deletedRequests')) || [])
-  const { token, setToken } = useAuth();
+  const { token, setToken, wishlistNumber, cartNumber } = useAuth();
   const [editModal, setEditModal] = useState(false)
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [nickName, setNickName] = useState("")
   const [password, setPassword] = useState("")
   const [image, setImage] = useState("")
+  const [userFriends, setUserFriends] = useState([])
+  const [showFriend, setShowFriend] = useState(false)
 
   useEffect(() => {
     const profileData = async () => {
@@ -74,6 +76,33 @@ const Profile = () => {
     }
   }, [profile, nickName, editModal])
 
+  useEffect(() => {
+    if(profile && profile.friends){
+      const friendsData = async(userId) => {
+        try {
+          const response = await axios(`http://localhost:5353/users/user/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return response.data.user
+        } catch (error) {
+          console.error('Error', error);
+        }
+      }
+      const promises = profile.friends.map(item => friendsData(item))
+      Promise.all(promises)
+        .then(usersData => {
+            setUserFriends(usersData)
+        })
+        .catch(error => {
+            console.error('Error', error);
+        })
+    }
+  }, [profile, nickName, editModal])
+  console.log(userFriends);
+  
+
   const responseRequest = async(id, bool) => {
     try {
       const response = await axios.post('http://localhost:5353/users/user/response', {id:id, response:bool}, {
@@ -89,6 +118,7 @@ const Profile = () => {
       console.error('Error', error);
     }
   } 
+  
 
   const updateProfileData = async(e) => {
     e.preventDefault()
@@ -148,12 +178,26 @@ const Profile = () => {
             </div>
           </div>
 
-          <div>
-            <p>Friends:</p>
-            {profile ?profile.friends.map(item => (
-              <div key={item}>{item}</div>
-            )): (<p>Loading...</p>)}
+          <div className={styles.user__links__div} onClick={()=> setShowFriend(!showFriend)}>
+            <span class="material-symbols-outlined">group</span>
+            <p>Friends</p>
+            {showFriend? 
+              <div className={styles.friends__box}>
+                <span class="material-symbols-outlined">close</span>
+                {userFriends ?userFriends.map(item => (
+                  <Link key={item._id} className={styles.friends__card} to={`/user/${item._id}`}>
+                    <img src={item.profileImage} alt="" />
+                    <p>{item.nickName}</p>
+                  </Link>
+                )): (<p>Loading...</p>)}
+              </div>
+            :""}
           </div>
+          
+          <Link to={'/library'} className={styles.user__links__div}>
+            <span class="material-symbols-outlined">casino</span>
+            <p>Games</p>
+          </Link>
 
           <div>
             {publications.length > 0 ? (
@@ -174,9 +218,12 @@ const Profile = () => {
                   ))}
                 </div>
               </div>})
-            ) : (<p>you don't have publications</p>)}
+            ) : (<p>You don't have publications</p>)}
           </div>
-          <Link to={'wishlist'}>Wishlist</Link>
+          <div className={styles.links__container}>
+            <Link to={'/profile/wishlist'} className={styles.links__wishlist}>Wishlist <span>({wishlistNumber})</span></Link>
+            <Link to={'/cart'} className={styles.links__cart}><span className={`material-symbols-outlined ${styles.links__icon}`}>shopping_cart</span><p>{cartNumber}</p></Link>
+          </div>
         </div>
 
 

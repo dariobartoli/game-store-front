@@ -33,6 +33,7 @@
     min-height: 200px;
     border-radius: 0.5rem;
     background-color: tomato;
+    position: relative;
 }
 
 .image__container{
@@ -54,6 +55,8 @@
     width: 45px;
     height: 45px;
     border-radius: 50%;
+    object-fit: cover;
+    border: 2px #b7240a solid;
 }
 .publication__info__contain{
     padding: 0.8rem 0.8rem 0.3rem 0.8rem;
@@ -64,7 +67,7 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
-    background-color: rgb(254, 84, 54);
+    background-color: #fe5436;
     border-radius: 0.3rem 0.3rem 0 0;
     border-bottom: 1px rgb(255, 70, 38) solid;
     padding: 5px;
@@ -72,6 +75,7 @@
 .author__box>p{
     color: black;
     font-size: 1.3rem;
+    font-weight: bold;
 }
 
 .publication__text__contain{
@@ -126,6 +130,153 @@
     transition: 0.3s;
 }
 
+.publication__form{
+    display: flex;
+    flex-direction: column;
+    background-color: tomato;
+    padding: 0.8rem;
+    border-radius: 0.3rem;
+    width: 88vw;
+    max-width: 600px;
+    color: black;
+    font-size: 1.2rem;
+    font-weight: bold;
+    gap: 0.5rem;
+}
+
+.publication__form input:nth-child(1){
+    width: 250px;
+    border: none;
+    height: 24px;
+    padding: 2px;
+    border-radius: 0.2rem;
+}
+
+.form__textarea{
+    border-radius: 0.2rem;
+    padding: 2px;
+    resize: none;
+}
+
+.publication__form input:nth-child(3){
+    border: none;
+    height: 24px;
+    padding: 3px;
+    border-radius: 0.2rem;
+    background-color: rgb(255, 81, 50);
+    font-weight: bold;
+}
+.publication__form button{
+    border: none;
+    height: 24px;
+    padding: 3px;
+    border-radius: 0.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 200px;
+    align-self: flex-end;
+    margin-top: 0.5rem;
+    transition: 0.3s;
+}
+.publication__form button:hover{
+    background-color: rgb(254, 76, 44);
+    transition: 0.3s;
+    font-size: 0.9rem;
+}
+.comment__box{
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.7rem;
+    background-color: rgba(128, 128, 128, 0.249);
+    border-radius: 0 0 0.8rem 0.8rem;
+}
+.comment__card{
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 3px;
+    background-color: #ff6347;
+    background-image: linear-gradient(to bottom, #cb4931, #d24c33, #da4f35, #e15237, #e95539);
+    border-radius: 0.3rem;
+    min-height: 10px;
+    position: relative;
+}
+.comment__card>a{
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-radius: 0.3rem;
+    padding: 2px;
+    width: 160px;
+    background-color: rgba(255, 255, 255, 0.387);
+}
+.comment__card>a:hover{
+    background-color: rgba(255, 255, 255, 0.477);
+}
+.comment__card>p{
+    color: rgb(33, 33, 33);
+    text-indent: 0.8rem;
+    overflow-wrap: break-word;
+}
+.comment__image{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px #b7240a solid;
+}
+.publication__delete{
+    background-color: white;
+    color: #ff0c0c;
+    cursor: pointer;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border-radius: 50%;
+    scale: 1.2;
+}
+.publication__delete:hover{
+    color: #ff3c3c;
+    scale: 1.1;
+}
+.comment__delete{
+    color: #bb1e1e;
+    cursor: pointer;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    border-radius: 50%;
+}
+.comment__delete:hover{
+    color: #c13d3d;
+}
+.newcomment__box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+}
+.newcomment__box>textarea{
+    resize: none;
+    width: 70%;
+    height: 50px;
+    border-radius: 0.3rem;
+    padding: 4px;
+}
+.newcomment__box>button{
+    border: none;
+    padding: 0.3rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    background-color: rgb(42, 42, 42);
+    color: white;
+    transition: 0.2;
+}
+.newcomment__box>button:hover{
+    scale: 1.1;
+    transition: 0.2;
+}
 @media (min-width: 768px){
     .publication__box{
         width: 680px;
@@ -135,6 +286,9 @@
     }
     .image__container{
         height: 400px;
+    }
+    .newcomment__box>textarea{
+        width: 86%;
     }
 
 }
@@ -147,5 +301,8 @@
     }
     .image__container{
         height: 550px;
+    }
+    .newcomment__box>textarea{
+        width: 90%;
     }
 }

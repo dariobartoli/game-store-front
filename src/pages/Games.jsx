@@ -17,6 +17,7 @@ const Games = () => {
     const { token, setToken, userId} = useAuth();
     const [users, setUsers] = useState([]);
     const {cartNumber, setCartNumber, wishlistNumber, setWishlistNumber} = useAuth();
+    const [reload, setReload] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,7 +37,7 @@ const Games = () => {
         if (id) {
             fetchData();
         }
-    }, [id, reviewModal]);
+    }, [id, reviewModal, reload]);
     
     
     const addWishlist = async(id) => {
@@ -103,6 +104,21 @@ const Games = () => {
             })
             setReviewModal(!reviewModal)
             alert(response.data.message)
+        } catch (error) {
+            console.error('Error', error);
+            alert(error.response.data.message)
+        }
+    }
+
+    const removeReview = async(id) => {
+        try {
+            const response = await axios.delete(`http://localhost:5353/reviews/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            alert(response.data.message)
+            setReload(!reload)
         } catch (error) {
             console.error('Error', error);
             alert(error.response.data.message)
@@ -181,15 +197,16 @@ const Games = () => {
                                             </div>}
                                         </div>
                                         <p>{item.text}</p>
+                                        {item.userId == userId? <span className={`material-symbols-outlined ${styles.review__remove__icon}`} onClick={()=>removeReview(item._id)}>delete</span> : ""}
                                     </div>
-                                )): (<h2 className={styles.text}>This game don't have reviews</h2>)}
+                                )): (<h2 className={styles.text}>This game don't has reviews</h2>)}
                         </div>
                     </div>
                 ) : ([])}
             </div>
             <div className={`${styles.review__modal} ${reviewModal? styles.review__modal__view : ""}`}>
                 <span className="material-symbols-outlined" onClick={()=> setReviewModal(!reviewModal)}>close</span>
-                <textarea name="review" id="review" cols="30" rows="12" className={styles.review__textarea} defaultValue={"Write your review here..."} onChange={e => setReviewText(e.target.value)}></textarea>
+                <textarea name="review" id="review" cols="30" rows="12" className={styles.review__textarea} placeholder="Write your review here..." onChange={e => setReviewText(e.target.value)}></textarea>
                 <div>
                     <select name="recommended" id="recommended" className={styles.review__select} onChange={e => setReviewRecommended(e.target.value)}>
                         <option value={true}>Recommended</option>

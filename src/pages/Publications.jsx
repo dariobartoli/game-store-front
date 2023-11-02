@@ -8,9 +8,9 @@ import styles from '../styles/Publication.module.css'
 const Publications = () => {
     const [publications, setPublications] = useState([])
     const [reload, setReload] = useState(false)
-    const { token, setToken } = useAuth();
-    const [commentUserData, setCommentUserData] = useState({});
-    const [commentNick, setCommentNick] = useState({})
+    const { token, setToken, userId } = useAuth();
+    const [commentNick, setCommentNick] = useState({});
+    const [commentImage, setCommentImage] = useState({})
     const [commentsLoaded, setCommentsLoaded] = useState(false);
     const [newComment, setNewComment] = useState("")
     const [title, setTitle] = useState("")
@@ -34,29 +34,29 @@ const Publications = () => {
     useEffect(() => {
         if (!commentsLoaded) {
             const fetchCommentUserNames = async () => {
-                const userNames = {};
                 const nickNames = {};
+                const profileImages = {}
                 for (const publication of publications) {
                     for (const comment of publication.comments) {
-                        if (!userNames[comment.user] || !nickNames[comment.user]) {
+                        if (!nickNames[comment.user] || !profileImages[comment.user]) {
                             try {
                             const response = await axios.get(`http://localhost:5353/users/user/${comment.user}`, {
                                 headers: {
                                 'Authorization': `Bearer ${token}`
                                 }
                             });
-                            userNames[comment.user] = response.data.user.email;
                             nickNames[comment.user] = response.data.user.nickName;
+                            profileImages[comment.user] = response.data.user.profileImage;
                             } catch (error) {
                             console.error('Error:', error.message);
-                            userNames[comment.user] = 'unknown user';
-                            nickNames[comment.user] = 'unknown nick'
+                            nickNames[comment.user] = 'unknown nick';
+                            profileImages[comment.user] = 'unknown profile image';
                             }
                         }
                     }
                 }
-                setCommentUserData(userNames);
                 setCommentNick(nickNames)
+                setCommentImage(profileImages)
                 setCommentsLoaded(true); // Marcar como cargados para evitar bucle infinito
             };
             if (publications.length > 0 && !commentsLoaded) {
@@ -87,6 +87,7 @@ const Publications = () => {
                 }
             })
             setNewComment("")
+            setReload(!reload)
         } catch (error) {
             console.error('Error', error);
         }
@@ -102,8 +103,10 @@ const Publications = () => {
                 }
             })
             alert(response.data.message);
+            setReload(!reload)
         } catch (error) {
             console.error('Error', error);
+            alert(error.response.data.message)
         }
     }
 
@@ -148,6 +151,36 @@ const Publications = () => {
         }
       }
 
+      const removePublication = async(id) => {
+        try {
+            const response = await axios.delete(`http://localhost:5353/publications/${id}`,{
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            })
+            setReload(!reload)
+            alert(response.data.message)
+        } catch (error) {
+            console.error('Error', error);
+            alert(error.response.data.message)
+        }
+      }
+
+      const removeComment = async(publicationId, commentId) => {
+        try {
+            const response = await axios.put('http://localhost:5353/publications/comment/remove', {publicationId, commentId}, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            })
+            setReload(!reload)
+            alert(response.data.message)
+        } catch (error) {
+            console.error('Error', error);
+            alert(error.response.data.message)
+        }
+      }
+
 
 
 
@@ -158,27 +191,26 @@ const Publications = () => {
   return (
     <div className={styles.publication__container}>
         <div className={styles.main__container}>
-            <h2>Create new publication:</h2>
-            <form id="publicationForm" encType="multipart/form-data" onSubmit={createPublish}>
-                <label htmlFor="title">Title:</label>
-                <input type="text" placeholder='Write...' id="title" onChange={e => setTitle(e.target.value)}/>
-                <label htmlFor="description">Description:</label>
-                <input type="text" placeholder='Write...' id="description" onChange={e => setDescription(e.target.value)}/>
+            <h2>SHARE YOUR FAVORITES ADVENTURES</h2>
+            <form id="publicationForm" encType="multipart/form-data" onSubmit={createPublish} className={styles.publication__form}>
+                <input type="text" placeholder='Title' id="title" onChange={e => setTitle(e.target.value)}/>
+                <textarea name="" id="description" cols="30" rows="10" onChange={e => setDescription(e.target.value)} className={styles.form__textarea} placeholder='description'></textarea>
                 <input type="file" id="fileInput2" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
                 <button type='submit'>Publish</button>
             </form>
             <div className={styles.publication__box}>
                 {publications.length>0 && authorInfo ? publications.map((item) => {
+                    console.log(item);
                     const author = Object.values(authorInfo).find(userInfo => userInfo._id === item.user);
                     return <div key={item._id} className={styles.publication__card}>
                         <div className={styles.image__container}>
                             <img src={item.images} alt="" className={styles.publication__image}/>
                         </div>
                         <div className={styles.publication__info__contain}>
-                            {author?<div className={styles.author__box}>
+                            {author?<Link className={styles.author__box} to={item.user == userId ? `/profile` : `/user/${item.user}`}>
                                 <img src={author.profileImage} alt="" className={styles.publication__profile__image}/>
                                 <p>{author.nickName}</p>
-                            </div> : ""}
+                            </Link> : ""}
                             <div className={styles.publication__text__contain}>
                                 <h4>{item.title}</h4>
                                 <p>{item.text}</p>
@@ -190,19 +222,27 @@ const Publications = () => {
                                     <button onClick={() => handleShowComments(item._id)}>Comments({item.comments.length})</button>
                                 </div>
                             </div>
-                            {item.show && item.comments && item.comments.length > 0 && item.comments.map((comment) => (
-                                <div key={comment._id}>
-                                    <p>{comment.text}</p>
-                                    <p>{commentNick[comment.user] ? commentNick[comment.user] : commentUserData[comment.user] }</p>
-                                </div>
-                            ))}
-                            {item.show ?
-                            <div>
-                                <input type="text" placeholder='add comment' value={newComment} onChange={e => setNewComment(e.target.value)}/>
+                            {item.show? 
+                            <div className={styles.comment__box}>
+                                {item.show && item.comments && item.comments.length > 0 && item.comments.map((comment) => (
+                                    <div key={comment._id} className={styles.comment__card}>
+                                        <Link to={comment.user == userId ? `/profile` : `/user/${comment.user}`}>
+                                            <img src={commentImage[comment.user]} alt="" className={styles.comment__image}/>
+                                            <p>{commentNick[comment.user]}:</p>
+                                        </Link>
+                                        <p>{comment.text}</p>
+                                        {comment.user == userId?<span className={`material-symbols-outlined ${styles.comment__delete}`} onClick={()=> removeComment(item._id, comment._id)}>delete_forever</span> : ""}
+                                    </div>
+                                ))}
+                            </div>: ""}
+                            {item.show?<div className={styles.newcomment__box}>
+                                <textarea type="text" placeholder='add comment' value={newComment} onChange={e => setNewComment(e.target.value)}/>
                                 <button onClick={() => addComment(item._id)}>Comment</button>
-                            </div>
-                            : ""}
+                            </div>: ""}
+
                         </div>
+                        {item.user == userId? <span className={`material-symbols-outlined ${styles.publication__delete}`} onClick={()=> removePublication(item._id)}>delete</span> : ""}
+                        
                     </div>
                 }) : (<p>hola</p>)}
             </div>
