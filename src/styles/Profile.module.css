@@ -267,7 +267,7 @@
     background-color: tomato;
     border-radius: 0.1rem;
     padding: 2px;
-    width: 100px;
+    width: 120px;
     cursor: pointer;
     transition: 0.3s;
     color: white;
@@ -303,24 +303,110 @@
     color: #3b3b3b;
     transition: 0.3s;
 }
+.friends__box>p{
+    text-align: center;
+    text-decoration: underline;
+    font-size: 1.1rem;
+}
 .friends__card{
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    justify-content: space-between;
     background-image: linear-gradient(to right, #575757, #5e5e5e, #646464, #6b6b6b, #727272);
-    padding: 2px;
+    padding: 5px;
     border-radius: 0.2rem;
-    cursor: pointer;
 }
 .friends__card:hover{
     background-image: linear-gradient(to left, #575757, #5e5e5e, #646464, #6b6b6b, #727272);
 }
-.friends__card>img{
+.friends__card>a{
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.friends__card>a>img{
     width: 45px;
     height: 45px;
     object-fit: cover;
     border-radius: 0.1rem;
     border: 2px #b7240a solid;;
+}
+.friends__card>span{
+    align-self: flex-start;
+    color: rgb(255, 55, 0);
+    transition: 0.2s;
+}
+.friends__card>span:hover{
+    color: rgb(164, 25, 25);
+    transition: 0.2s;
+}
+
+.publication__box{
+    background-color: tomato;
+    position: fixed;
+    transform: translate(-50%, 0%);
+    left: 50%;
+    top: 11%;
+    width: 90%;
+    max-width: 700px;
+    padding: 1rem;
+    z-index: 6;
+    border-radius: 0.3rem;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    overflow: auto;
+}
+.publication__box>span{
+    align-self: flex-end;
+    color: black;
+    cursor: pointer;
+    transition: 2s;
+}
+.publication__box>span:hover{
+    color: rgb(65, 65, 65);
+    transition: 2s;
+}
+.publication__card{
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    background-color: rgba(152, 152, 152, 0.55);
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+}
+.publication__card >:nth-child(1){
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+}
+.publication__card >:nth-child(2){
+    font-size: 1.1rem;
+    text-indent: 0.8rem;
+    color: rgb(55, 55, 55);
+}
+.publication__card >div{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 0.2rem;
+    color: rgb(0, 0, 0);
+}
+.publication__card >div>div{
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+.publication__card >div>div>span{
+    color: orangered;
+}
+.publication__box>p{
+    text-align: center;
+    font-size: 1.1rem;
+    text-decoration: underline;
 }
 @media (min-width: 769px){
     .profile__card{

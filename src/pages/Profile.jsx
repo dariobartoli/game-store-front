@@ -19,6 +19,8 @@ const Profile = () => {
   const [image, setImage] = useState("")
   const [userFriends, setUserFriends] = useState([])
   const [showFriend, setShowFriend] = useState(false)
+  const [friendList, setFriendList] = useState([])
+  const [showPublication, setShowPublication] = useState(false)
 
   useEffect(() => {
     const profileData = async () => {
@@ -33,7 +35,9 @@ const Profile = () => {
         console.error('Error:', error.response.data.message);
       }
     };
-/*     const publicationsData = async () => {
+    profileData();
+
+    const publicationsData = async () => {
       try {
         const response = await axios.get("http://localhost:5353/publications", {
           headers: {
@@ -45,11 +49,13 @@ const Profile = () => {
         console.error('Error:', error);
       }
     };
-    publicationsData(); */
-    profileData();
+    publicationsData();
   }, [token]);
 
+  useEffect(() => {
 
+  }, [])
+  
   useEffect(() => {
     if (profile && profile.friendRequest){
       const filteredRequests = profile.friendRequest.filter(request => !deletedRequests.includes(request));
@@ -78,6 +84,9 @@ const Profile = () => {
 
   useEffect(() => {
     if(profile && profile.friends){
+      if(friendList.length == 0){
+        setFriendList(profile.friends)
+      }
       const friendsData = async(userId) => {
         try {
           const response = await axios(`http://localhost:5353/users/user/${userId}`, {
@@ -90,7 +99,7 @@ const Profile = () => {
           console.error('Error', error);
         }
       }
-      const promises = profile.friends.map(item => friendsData(item))
+      const promises = friendList.map(item => friendsData(item))
       Promise.all(promises)
         .then(usersData => {
             setUserFriends(usersData)
@@ -99,8 +108,7 @@ const Profile = () => {
             console.error('Error', error);
         })
     }
-  }, [profile, nickName, editModal])
-  console.log(userFriends);
+  }, [profile, nickName, editModal, showFriend])
   
 
   const responseRequest = async(id, bool) => {
@@ -114,6 +122,8 @@ const Profile = () => {
       localStorage.setItem('deletedRequests', JSON.stringify(updatedDeletedRequests));
       const updatedRequests = requests.filter(request => request._id !== id);
       setRequests(updatedRequests)
+      const updateFriendList = [...friendList, id]
+      setFriendList(updateFriendList)
     } catch (error) {
       console.error('Error', error);
     }
@@ -138,6 +148,23 @@ const Profile = () => {
     }
   }
 
+  const removeFriend = async(id)=> {
+    try {
+      const response = await axios.delete(`http://localhost:5353/users/user/remove/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+      alert(response.data.message)
+      const updateFriendList = friendList.filter(item => item != id)
+      setFriendList(updateFriendList)
+      setShowFriend(!showFriend)
+    } catch (error) {
+      console.error('Error', error);
+      alert(error.response.data.message)
+    }
+  }
 
 
   return (
@@ -178,48 +205,63 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className={styles.user__links__div} onClick={()=> setShowFriend(!showFriend)}>
-            <span class="material-symbols-outlined">group</span>
-            <p>Friends</p>
+          <div className={styles.user__links__div}>
+            <span className="material-symbols-outlined" onClick={()=> setShowFriend(!showFriend)}>group</span>
+            <p onClick={()=> setShowFriend(!showFriend)}>Friends</p>
             {showFriend? 
               <div className={styles.friends__box}>
-                <span class="material-symbols-outlined">close</span>
-                {userFriends ?userFriends.map(item => (
-                  <Link key={item._id} className={styles.friends__card} to={`/user/${item._id}`}>
-                    <img src={item.profileImage} alt="" />
-                    <p>{item.nickName}</p>
-                  </Link>
-                )): (<p>Loading...</p>)}
+                <span className="material-symbols-outlined" onClick={()=> setShowFriend(!showFriend)}>close</span>
+                {userFriends.length>0 ?userFriends.map(item => (
+                  <div key={item._id} className={styles.friends__card}>
+                    <Link to={`/user/${item._id}`}>
+                      <img src={item.profileImage} alt="" />
+                      <p>{item.nickName}</p>
+                    </Link>
+                    <span className="material-symbols-outlined" onClick={() =>  removeFriend(item._id)}>person_remove</span>
+                  </div>
+                )): (<p>You don't have any friend</p>)}
               </div>
-            :""}
+            : ""}
           </div>
           
           <Link to={'/library'} className={styles.user__links__div}>
-            <span class="material-symbols-outlined">casino</span>
+            <span className="material-symbols-outlined">casino</span>
             <p>Games</p>
           </Link>
 
-          <div>
-            {publications.length > 0 ? (
-              publications.map((publication) => {return <div key={publication._id}>
-                <p>{publication.title}</p>
-                <div>
-                  {publication.images.map((image, index) => (
-                    <img key={index} src={image} alt={`Image ${index}`} />
-                  ))}
-                </div>
-                <p>{publication.text}</p>
-                <p>{publication.likes.length}</p>
-                <div>
-                  {publication.comments.map((comment, index) =>(
-                    <div key={index}>
-                      <p>{comment.text}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>})
-            ) : (<p>You don't have publications</p>)}
+          <div className={styles.user__links__div} onClick={()=> setShowPublication(!showPublication)}>
+           <span className="material-symbols-outlined">list_alt</span>
+           <p>Publications</p>
           </div>
+
+
+          {showPublication? 
+            <div className={styles.publication__box}>
+              <span className="material-symbols-outlined" onClick={()=> setShowPublication(!showPublication)}>close</span>
+              {publications.length > 0 ? (
+                publications.map((publication) => {
+                  const date = publication.createdAt.split('T')
+                  const date2 = date[0].split('-')
+                  const date3 = date2[1]+ "-"+date2[2]+"-"+ date2[0]
+                  return <div key={publication._id} className={styles.publication__card}>
+                            <div>
+                              <p>{publication.title}</p>
+                              <p>{date3}</p>
+                            </div>
+                            <p>{publication.text}</p>
+                            <div>
+                              <div>
+                                <span className="material-symbols-outlined">thumb_up</span>
+                                <p>{publication.likes.length}</p>
+                              </div>
+                              <p>Comments: {publication.comments.length}</p>
+                            </div>
+                         </div>})
+              ) : (<p>You don't have publications</p>)}
+            </div>
+          : ""}
+
+        
           <div className={styles.links__container}>
             <Link to={'/profile/wishlist'} className={styles.links__wishlist}>Wishlist <span>({wishlistNumber})</span></Link>
             <Link to={'/cart'} className={styles.links__cart}><span className={`material-symbols-outlined ${styles.links__icon}`}>shopping_cart</span><p>{cartNumber}</p></Link>

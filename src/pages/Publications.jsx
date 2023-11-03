@@ -181,13 +181,6 @@ const Publications = () => {
         }
       }
 
-
-
-
-    
-
-
-
   return (
     <div className={styles.publication__container}>
         <div className={styles.main__container}>
@@ -200,8 +193,10 @@ const Publications = () => {
             </form>
             <div className={styles.publication__box}>
                 {publications.length>0 && authorInfo ? publications.map((item) => {
-                    console.log(item);
                     const author = Object.values(authorInfo).find(userInfo => userInfo._id === item.user);
+                    const date = item.createdAt.split('T')
+                    const date2 = date[0].split('-')
+                    const date3 = date2[1]+ "-"+date2[2]+"-"+ date2[0]
                     return <div key={item._id} className={styles.publication__card}>
                         <div className={styles.image__container}>
                             <img src={item.images} alt="" className={styles.publication__image}/>
@@ -212,7 +207,10 @@ const Publications = () => {
                                 <p>{author.nickName}</p>
                             </Link> : ""}
                             <div className={styles.publication__text__contain}>
-                                <h4>{item.title}</h4>
+                                <div>
+                                    <h4>{item.title}</h4>
+                                    <p className={styles.publication__date}>{date3}</p>
+                                </div>
                                 <p>{item.text}</p>
                                 <div>
                                     <div>
