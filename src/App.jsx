@@ -18,6 +18,7 @@ import { useAuth } from "./context/AuthContext";
 import { useEffect } from "react";
 import UsersPage from "./pages/UsersPage";
 import Library from "./pages/Library";
+import Chat from "./pages/Chat";
 
 function App() {
   const { isLogged, setIsLogged } = useAuth();

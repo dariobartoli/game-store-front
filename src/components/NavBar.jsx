@@ -53,6 +53,7 @@ const NavBar = () => {
             {isLogged && <NavLink to={"posts"} onClick={() => handleClick()} className={(navData) => navData.isActive? styles.active : styles.ancor}>Posts</NavLink>}
             {isLogged && <NavLink to={"library"} onClick={() => handleClick()} className={(navData) => navData.isActive? styles.active : styles.ancor}>Library</NavLink>}
             {isLogged && <NavLink to={"profile"} onClick={() => handleClick()} className={(navData) => navData.isActive? styles.active : styles.ancor}>Profile</NavLink>}
+            {/* {isLogged && <NavLink to={"chat"} onClick={() => handleClick()} className={(navData) => navData.isActive? styles.active : styles.ancor}>Chat</NavLink>} */}
           </nav>
         </div>
         <img src="./img/logo.png" alt="" className={styles.logo__desk}/>

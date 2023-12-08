@@ -17,6 +17,22 @@
     position: relative;
     gap: 0.5rem;
 }
+.wallpaper{
+    background-image: url('../../public/img/wallpaper2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 1rem;
+    border-radius: 6px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+.wallpaper__users{
+    background-image: url('../../public/img/wallpaper3.jpg');
+}
+
 
 .profile__data{
     display: flex;
@@ -37,10 +53,24 @@
     flex-direction: column;
     width: 250px;
     gap: 2rem;
-    border: 1px rgb(82, 82, 82) solid;
+    border: 1px rgb(54, 54, 54) solid;
     padding-bottom: 2rem;
     border-radius: 0.5rem;
     position: relative;
+    background-color: rgba(0, 0, 0, 0.433);
+}
+.add__friend{
+    scale: 1.2;
+    position: absolute;
+    right: 10px;
+    color: tomato;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.add__friend:hover{
+    scale: 1.25;
+    transition: 0.2s;
+    color: rgb(250, 117, 93);
 }
 
 .text__container{
@@ -324,6 +354,9 @@
     align-items: center;
     gap: 0.3rem;
 }
+.friends__card>a>p{
+    color: white;
+}
 .friends__card>a>img{
     width: 45px;
     height: 45px;
@@ -408,6 +441,13 @@
     font-size: 1.1rem;
     text-decoration: underline;
 }
+.add__funds{
+    color: tomato !important;
+    cursor: pointer;
+    background-color: white;
+    padding: 1px;
+    border-radius: 3px;
+}
 @media (min-width: 769px){
     .profile__card{
         flex-direction: row;
@@ -434,10 +474,18 @@
     .links__container{
         right: 50px;
     }
+    .wallpaper{
+        width: 620px;
+    }
+
 }
 
 @media (min-width: 1600px){
     .links__container{
         right: 500px;
+    }
+    .wallpaper{
+        width: 60%;
+        height: 600px;
     }
 }

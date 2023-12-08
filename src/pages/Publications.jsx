@@ -242,7 +242,7 @@ const Publications = () => {
                         {item.user == userId? <span className={`material-symbols-outlined ${styles.publication__delete}`} onClick={()=> removePublication(item._id)}>delete</span> : ""}
                         
                     </div>
-                }) : (<p>hola</p>)}
+                }) : (<p>Don't found publications</p>)}
             </div>
         </div>
     </div>

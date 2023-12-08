@@ -6,7 +6,7 @@ import { useState, useEffect} from 'react'
 import styles from '../styles/Profile.module.css'
 
 const UsersPage = () => {
-    const {token, setToken} = useAuth()
+    const {token, setToken, userId} = useAuth()
     const [userData, setUserData] = useState({})
     const { id } = useParams();
 
@@ -42,18 +42,37 @@ const UsersPage = () => {
     }
 
 
+
   return (
     <div className={styles.profile__container}>
         <div className={styles.main__container}>
-            <div className={styles.profile__card}>
-                <img src={userData.profileImage} alt="" className={styles.profile__image}/>
-                <div className={styles.text__container}>
-                    <p>First name: <span>{userData.firstName}</span></p>
-                    <p>Nick: <span>{userData.nickName}</span></p>
-                    <p></p>
+            <div className={`${styles.wallpaper} ${styles.wallpaper__users}`}>
+                <div className={styles.profile__data}>
+                    <div className={styles.profile__card}>
+                        <img src={userData.profileImage} alt="" className={styles.profile__image}/>
+                        <div className={styles.text__container}>
+                            {userData.friends && userData.friends.includes(userId) ? null : (
+                                <span className={`material-symbols-outlined ${styles.add__friend}`} onClick={addFriend}>person_add</span>
+                            )}
+                            <p>First name: <span>{userData.firstName}</span></p>
+                            <p>Nick: <span>{userData.nickName}</span></p>
+                            <p></p>
+                        </div>
+                    </div>
+                    <div className={styles.user__links__div}>
+                        <span className="material-symbols-outlined">group</span>
+                        <p>Friends</p>
+                    </div>
+                    <div className={styles.user__links__div}>
+                        <span className="material-symbols-outlined">casino</span>
+                        <p>Games</p>
+                    </div>
+                    <div className={styles.user__links__div}>
+                        <span className="material-symbols-outlined">list_alt</span>
+                        <p>Publications</p>
+                    </div>
                 </div>
             </div>
-            <span className="material-symbols-outlined" onClick={addFriend}>person_add</span>
         </div>
     </div>
   )
