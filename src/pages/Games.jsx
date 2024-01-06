@@ -14,21 +14,23 @@ const Games = () => {
     const [reviewText, setReviewText] = useState("")
     const [reviewRecommended, setReviewRecommended] = useState(true)
     const { id } = useParams();
-    const { token, setToken, userId} = useAuth();
+    const { token, setToken, userId, apiUrl} = useAuth();
     const [users, setUsers] = useState([]);
     const {cartNumber, setCartNumber, wishlistNumber, setWishlistNumber} = useAuth();
     const [reload, setReload] = useState(false)
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Realiza la solicitud para obtener la información del juego
-                const gameResponse = await axios.get(`http://localhost:5353/products/product/${id}`);
+                const gameResponse = await axios.get(`${apiUrl}products/product/${id}`);
                 setGame(gameResponse.data.product);
     
                 // Luego de obtener la información del juego, realiza la solicitud para obtener las revisiones
-                const reviewsResponse = await axios.get(`http://localhost:5353/reviews/${gameResponse.data.product._id}`);
-                setReviews(reviewsResponse.data.reviews);
+                const reviewsResponse = await axios.get(`${apiUrl}reviews/${gameResponse.data.product._id}`);
+                const reviewsShow = reviewsResponse.data.reviews.filter((review) => review.aprobado)
+                setReviews(reviewsShow);
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -42,7 +44,7 @@ const Games = () => {
     
     const addWishlist = async(id) => {
         try {
-            const response = await axios.post('http://localhost:5353/wishlist', {id}, {
+            const response = await axios.post(`${apiUrl}wishlist`, {id}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -57,7 +59,7 @@ const Games = () => {
     }
     const addToCart = async(id, variant) => {
         try {
-            const response = await axios.post('http://localhost:5353/carts', {id, variant}, {
+            const response = await axios.post(`${apiUrl}carts`, {id, variant}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -74,7 +76,7 @@ const Games = () => {
     useEffect(() => {
         const userInfo = async(userId) => {
             try {
-                const response = await axios(`http://localhost:5353/users/user/${userId}`, {
+                const response = await axios(`${apiUrl}users/user/${userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -97,7 +99,7 @@ const Games = () => {
 
     const addReview = async(id)=> {
         try {
-            const response = await axios.post('http://localhost:5353/reviews', {id:id, text:reviewText, recommended:reviewRecommended}, {
+            const response = await axios.post(`${apiUrl}reviews`, {id:id, text:reviewText, recommended:reviewRecommended}, {
                 headers:{
                     'Authorization': `Bearer ${token}`
                 }
@@ -112,7 +114,7 @@ const Games = () => {
 
     const removeReview = async(id) => {
         try {
-            const response = await axios.delete(`http://localhost:5353/reviews/${id}`, {
+            const response = await axios.delete(`${apiUrl}reviews/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

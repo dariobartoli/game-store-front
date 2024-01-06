@@ -11,12 +11,14 @@ export function AuthProvider({ children }) {
   const [userId, setUserId] = useState(localStorage.getItem('userId') || null)
   const [cartNumber, setCartNumber] = useState(0)
   const [wishlistNumber, setWishlistNumber] = useState(0)
+  const [backgroundOld, setBackgroundOld] = useState(localStorage.getItem('bg') || null)
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (isLogged) {
       const getCartData = async() => {
           try {
-              const response = await axios.get('http://localhost:5353/carts', {
+              const response = await axios.get(`${apiUrl}carts`, {
                   headers: {
                       'Authorization': `Bearer ${token}`
                   }
@@ -32,7 +34,7 @@ export function AuthProvider({ children }) {
       }
       const wishlistNum = async () => {
         try {
-          const response = await axios.get("http://localhost:5353/users", {
+          const response = await axios.get(`${apiUrl}users`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -49,7 +51,7 @@ export function AuthProvider({ children }) {
 
 
   return (
-    <AuthContext.Provider value={{ token, setToken, isLogged, setIsLogged, userId, setUserId, cartNumber, setCartNumber, wishlistNumber, setWishlistNumber}}>
+    <AuthContext.Provider value={{ token, setToken, isLogged, setIsLogged, userId, setUserId, cartNumber, setCartNumber, wishlistNumber, setWishlistNumber, apiUrl, backgroundOld, setBackgroundOld}}>
       {children}
     </AuthContext.Provider>
   );

@@ -9,13 +9,13 @@ const Cart = () => {
     const [cartData, setCartData] = useState([])
     const [updateData, setUpdateData] = useState(false)
     const [total, setTotal] = useState(0)
-    const {cartNumber, setCartNumber} = useAuth();
-    const { token, setToken } = useAuth();
+    const {cartNumber, setCartNumber, setWishlistNumber} = useAuth();
+    const { token, setToken, apiUrl } = useAuth();
 
     useEffect(() => {
         const getCartData = async() => {
             try {
-                const response = await axios.get('http://localhost:5353/carts', {
+                const response = await axios.get(`${apiUrl}carts`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -38,7 +38,7 @@ const Cart = () => {
     
     const removeToCart = async(id) => {
         try {
-            const response = await axios.delete(`http://localhost:5353/carts/${id}`, {
+            const response = await axios.delete(`${apiUrl}carts/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -53,7 +53,7 @@ const Cart = () => {
 
     const cleanCart = async ()=> {
         try {
-            const response = await axios.delete('http://localhost:5353/carts/clean', {
+            const response = await axios.delete(`${apiUrl}carts/clean`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -67,11 +67,18 @@ const Cart = () => {
 
     const buyGames = async() => {
         try {
-            const response = await axios.delete('http://localhost:5353/carts/purchase', {
+            const response = await axios.delete(`${apiUrl}carts/purchase`, {
                 headers: {
                     'authorization': `Bearer ${token}`
                 }
             })
+            const responseWishlist = await axios.get(`${apiUrl}wishlist`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            const wishlistLength = responseWishlist.data.wishlist.length
+            setWishlistNumber(wishlistLength)
             alert(response.data.message)
             setUpdateData(!updateData)
             setCartNumber(0)

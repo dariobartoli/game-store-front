@@ -10,7 +10,7 @@ const Profile = () => {
   const [requests, setRequests] = useState([])
   const [viewRequest, setViewRequest] = useState(false)
   const [deletedRequests, setDeletedRequests] = useState(JSON.parse(localStorage.getItem('deletedRequests')) || [])
-  const { token, setToken, wishlistNumber, cartNumber } = useAuth();
+  const { token, setToken, wishlistNumber, cartNumber, apiUrl, backgroundOld, setBackgroundOld } = useAuth();
   const [editModal, setEditModal] = useState(false)
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -21,16 +21,23 @@ const Profile = () => {
   const [showFriend, setShowFriend] = useState(false)
   const [friendList, setFriendList] = useState([])
   const [showPublication, setShowPublication] = useState(false)
+  const [backgroundShow, setBackgroundShow] = useState(false)
+  const [backgroundSelect, setBackgroundSelect] = useState(null)
+  console.log(backgroundOld);
 
+  
   useEffect(() => {
     const profileData = async () => {
       try {
-        const response = await axios.get("http://localhost:5353/users", {
+        const response = await axios.get(`${apiUrl}users`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         setProfile(response.data.user);
+        if(backgroundOld == null){
+          setBackgroundOld(response.data.user.background)
+        }
       } catch (error) {
         console.error('Error:', error.response.data.message);
       }
@@ -39,7 +46,7 @@ const Profile = () => {
 
     const publicationsData = async () => {
       try {
-        const response = await axios.get("http://localhost:5353/publications", {
+        const response = await axios.get(`${apiUrl}publications`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -51,17 +58,13 @@ const Profile = () => {
     };
     publicationsData();
   }, [token]);
-
-  useEffect(() => {
-
-  }, [])
   
   useEffect(() => {
     if (profile && profile.friendRequest){
       const filteredRequests = profile.friendRequest.filter(request => !deletedRequests.includes(request));
       const userInfo = async(userId) => {
           try {
-              const response = await axios(`http://localhost:5353/users/user/${userId}`, {
+              const response = await axios(`${apiUrl}users/user/${userId}`, {
                   headers: {
                       'Authorization': `Bearer ${token}`
                   }
@@ -89,7 +92,7 @@ const Profile = () => {
       }
       const friendsData = async(userId) => {
         try {
-          const response = await axios(`http://localhost:5353/users/user/${userId}`, {
+          const response = await axios(`${apiUrl}users/user/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -113,7 +116,7 @@ const Profile = () => {
 
   const responseRequest = async(id, bool) => {
     try {
-      const response = await axios.post('http://localhost:5353/users/user/response', {id:id, response:bool}, {
+      const response = await axios.post(`${apiUrl}users/user/response`, {id:id, response:bool}, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -133,7 +136,7 @@ const Profile = () => {
   const updateProfileData = async(e) => {
     e.preventDefault()
     try {
-      const response = await axios.put('http://localhost:5353/users', {imagen:image, firstName:firstName, lastName:lastName, password:password, nickName:nickName}, {
+      const response = await axios.put(`${apiUrl}users`, {imagen:image, firstName:firstName, lastName:lastName, password:password, nickName:nickName}, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -150,7 +153,7 @@ const Profile = () => {
 
   const removeFriend = async(id)=> {
     try {
-      const response = await axios.delete(`http://localhost:5353/users/user/remove/${id}`, {
+      const response = await axios.delete(`${apiUrl}users/user/remove/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -167,10 +170,31 @@ const Profile = () => {
   }
 
 
+  const handleBackground = async(e) => {
+    e.preventDefault()
+    try {
+      const response = await axios.post(`${apiUrl}background/change`, {name: backgroundSelect}, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+      const newBackground = response.data.background[0].url
+      setBackgroundOld(newBackground)
+      setBackgroundShow(false)
+      localStorage.setItem('bg', newBackground);
+      alert(response.data.message)
+    } catch (error) {
+      console.error('Error', error);
+      alert(error.response.data.message)
+    }
+  }
+
+
+
   return (
     <div className={styles.profile__container}>
       <div className={styles.main__container}>
-        <div className={styles.wallpaper}>
+        <div className={styles.wallpaper} style={profile? {backgroundImage: `url(${backgroundOld})`} : null}>
           <div className={styles.profile__data}>
             {profile ? (
               <div className={styles.profile__card}>
@@ -181,6 +205,7 @@ const Profile = () => {
                   <p>Email: <span>{profile.email}</span></p>
                   <p>Nick: <span>{profile.nickName}</span></p>
                   <p>Wallet: <span>${profile.wallet}</span> <span className={styles.add__funds}>ADD FUNDS</span></p>
+                  <button onClick={() => setBackgroundShow(!backgroundShow)}>cambiar balkground</button>
                 </div>
                 <span className={`material-symbols-outlined ${styles.edit__icon}`} onClick={()=> setEditModal(!editModal)}> edit</span>
               </div>
@@ -285,6 +310,58 @@ const Profile = () => {
             <button type='submit'>Update</button>
           </form>
         </div>
+
+        {
+          backgroundShow? 
+          <div className={styles.background__container}>
+            <form className={styles.background__form}>
+              <label htmlFor="back1">
+                <input type="radio" name="back" id="back1" value={"bg1"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper.jpg" alt="Imagen 1" />
+              </label>
+              <label htmlFor="back2">
+                <input type="radio" name="back" id="back2" value={"bg2"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper2.jpg" alt="Imagen 1" />
+              </label>
+              <label htmlFor="back3">
+                <input type="radio" name="back" id="back3" value={"bg3"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper3.jpg" alt="Imagen 1" />
+              </label>
+              <label htmlFor="back4">
+                <input type="radio" name="back" id="back4" value={"bg4"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper4.webp" alt="Imagen 1" />
+              </label>
+              <label htmlFor="back5">
+                <input type="radio" name="back" id="back5" value={"bg5"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper5.webp" alt="Imagen 1" />
+              </label>
+              <label htmlFor="back6">
+                <input type="radio" name="back" id="back6" value={"bg6"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper6.jpg" alt="Imagen 1" />
+              </label>
+              <label htmlFor="back7">
+                <input type="radio" name="back" id="back7" value={"bg7"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper7.jpg" alt="Imagen 1" />
+              </label>
+              <label htmlFor="back8">
+                <input type="radio" name="back" id="back8" value={"bg8"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper8.jpg" alt="Imagen 1" />
+              </label>
+              <label htmlFor="back9">
+                <input type="radio" name="back" id="back9" value={"bg9"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper9.jpg" alt="Imagen 1" />
+              </label>
+              <label htmlFor="back10">
+                <input type="radio" name="back" id="back10" value={"bg10"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
+                <img src="./img/wallpaper10.jpg" alt="Imagen 1" />
+              </label>
+              <button onClick={handleBackground}>Cambiar</button>
+
+            </form>
+
+          </div>
+          : ""
+        }
       </div>
     </div>
   )

@@ -18,7 +18,6 @@
     gap: 0.5rem;
 }
 .wallpaper{
-    background-image: url('../../public/img/wallpaper2.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     padding: 1rem;
@@ -448,6 +447,33 @@
     padding: 1px;
     border-radius: 3px;
 }
+
+.background__container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 8px;
+}
+
+.background__form>label>img{
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 3px;
+}
+input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+input[type="radio"]:focus + img {
+    border: 1px rgb(238, 141, 62) solid;
+}
+
 @media (min-width: 769px){
     .profile__card{
         flex-direction: row;

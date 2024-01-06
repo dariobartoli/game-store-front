@@ -1,17 +1,20 @@
 import { useState } from 'react'
 import axios from 'axios'
 import styles from '../styles/Register.module.css'
+import { useAuth } from '../context/AuthContext'
+
 
 const Register = ({onClose}) => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const { apiUrl} = useAuth()
 
 
   const registerInApp = async()=> {
     try {
-      const response = await axios.post('http://localhost:5353/auth/register', {firstName, lastName, email, password})
+      const response = await axios.post(`${apiUrl}auth/register`, {firstName, lastName, email, password})
       alert("register successful")
       onClose()
     } catch (error) {

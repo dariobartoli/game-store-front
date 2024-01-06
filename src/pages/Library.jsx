@@ -6,13 +6,13 @@ import styles from '../styles/Library.module.css'
 import { Link } from 'react-router-dom'
 
 const Library = () => {
-    const {token, setToken, userId} = useAuth()
+    const {token, setToken, userId, apiUrl} = useAuth()
     const [library, setLibrary] = useState([])
 
     useEffect(() => {
         const getLibraryData = async() => {
             try {
-                const response =  await axios.get(`http://localhost:5353/products/library/${userId}`)
+                const response =  await axios.get(`${apiUrl}products/library/${userId}`)
                 setLibrary(response.data.library)
             } catch (error) {
                 console.error('Error:', error);

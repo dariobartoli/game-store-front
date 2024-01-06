@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import styles from '../styles/Publication.module.css'
@@ -8,7 +8,7 @@ import styles from '../styles/Publication.module.css'
 const Publications = () => {
     const [publications, setPublications] = useState([])
     const [reload, setReload] = useState(false)
-    const { token, setToken, userId } = useAuth();
+    const { token, setToken, userId, apiUrl } = useAuth();
     const [commentNick, setCommentNick] = useState({});
     const [commentImage, setCommentImage] = useState({})
     const [commentsLoaded, setCommentsLoaded] = useState(false);
@@ -17,14 +17,17 @@ const Publications = () => {
     const [description, setDescription] = useState("")
     const [image, setImage] = useState("")
     const [authorInfo, setAuthorInfo] = useState(null)
+
+
     
     useEffect(() => {
         const publicationsData = async () => {
           try {
-            const response = await axios.get(`http://localhost:5353/publications/all`);
-            setPublications(response.data.publications.reverse());
+            const response = await axios.get(`${apiUrl}publications/all`);
+            const publicationsShows = response.data.publications.filter(publication => publication.aprobado === true)
+            setPublications(publicationsShows.reverse());
           } catch (error) {
-            console.error('Error:', error.message);
+            console.error('Error:', error);
           }
         };
     
@@ -40,7 +43,7 @@ const Publications = () => {
                     for (const comment of publication.comments) {
                         if (!nickNames[comment.user] || !profileImages[comment.user]) {
                             try {
-                            const response = await axios.get(`http://localhost:5353/users/user/${comment.user}`, {
+                            const response = await axios.get(`${apiUrl}users/user/${comment.user}`, {
                                 headers: {
                                 'Authorization': `Bearer ${token}`
                                 }
@@ -67,7 +70,7 @@ const Publications = () => {
 
     const getUserInfo = async (userId) => {
         try {
-          const response = await axios.get(`http://localhost:5353/users/user/${userId}`, {
+          const response = await axios.get(`${apiUrl}users/user/${userId}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -81,22 +84,24 @@ const Publications = () => {
 
     const addComment = async(id) => {
         try {
-            const response = await axios.post('http://localhost:5353/publications/comment', {id, text: newComment} ,{
+            const response = await axios.post(`${apiUrl}publications/comment`, {id, text: newComment} ,{
                 headers: {
                 'Authorization': `Bearer ${token}`
                 }
             })
             setNewComment("")
             setReload(!reload)
+            alert(response.data.message)
         } catch (error) {
             console.error('Error', error);
+            alert(error.response.data.message)
         }
     }
 
     const createPublish = async(e) => {
         try {
             e.preventDefault()
-            const response = await axios.post('http://localhost:5353/publications', {images: image, title: title, text: description}, {
+            const response = await axios.post(`${apiUrl}publications`, {images: image, title: title, text: description}, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
@@ -112,7 +117,7 @@ const Publications = () => {
 
     const handleShowComments = async(id) => {
         try {
-            const response = await axios.put('http://localhost:5353/publications/show', {id},{
+            const response = await axios.put(`${apiUrl}publications/show`, {id},{
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
@@ -123,6 +128,19 @@ const Publications = () => {
         }
     }
 
+    const [modo, setModo] = useState(false)
+
+
+    const [showModal, setShowModal] = useState(new Array(publications.length).fill(false))
+    
+    const handleModal = (index) => {
+        setShowModal(prevShowModal => {
+            const newShowModal = [...prevShowModal]; // Crear una copia del estado previo
+            newShowModal[index] = !newShowModal[index];
+            return newShowModal; // Devolver el nuevo estado actualizado
+        });
+    }
+    
     useEffect(() => {
         // Obtener información del usuario para todas las publicaciones
         publications.forEach((item) => {
@@ -140,7 +158,7 @@ const Publications = () => {
 
       const likePublication = async(id) => {
         try {
-            const response = await axios.post('http://localhost:5353/publications/like', {id},{
+            const response = await axios.post(`${apiUrl}publications/like`, {id},{
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
@@ -153,7 +171,7 @@ const Publications = () => {
 
       const removePublication = async(id) => {
         try {
-            const response = await axios.delete(`http://localhost:5353/publications/${id}`,{
+            const response = await axios.delete(`${apiUrl}publications/${id}`,{
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
@@ -168,7 +186,7 @@ const Publications = () => {
 
       const removeComment = async(publicationId, commentId) => {
         try {
-            const response = await axios.put('http://localhost:5353/publications/comment/remove', {publicationId, commentId}, {
+            const response = await axios.put(`${apiUrl}publications/comment/remove`, {publicationId, commentId}, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
@@ -192,7 +210,7 @@ const Publications = () => {
                 <button type='submit'>Publish</button>
             </form>
             <div className={styles.publication__box}>
-                {publications.length>0 && authorInfo ? publications.map((item) => {
+                {publications.length>0 && authorInfo ? publications.map((item, index) => {
                     const author = Object.values(authorInfo).find(userInfo => userInfo._id === item.user);
                     const date = item.createdAt.split('T')
                     const date2 = date[0].split('-')
@@ -202,10 +220,10 @@ const Publications = () => {
                             <img src={item.images} alt="" className={styles.publication__image}/>
                         </div>
                         <div className={styles.publication__info__contain}>
-                            {author?<Link className={styles.author__box} to={item.user == userId ? `/profile` : `/user/${item.user}`}>
+                            {author?<NavLink className={styles.author__box} to={item.user == userId ? `/profile` : `/user/${item.user}`}>
                                 <img src={author.profileImage} alt="" className={styles.publication__profile__image}/>
                                 <p>{author.nickName}</p>
-                            </Link> : ""}
+                            </NavLink> : ""}
                             <div className={styles.publication__text__contain}>
                                 <div>
                                     <h4>{item.title}</h4>
@@ -217,20 +235,22 @@ const Publications = () => {
                                         <span className="material-symbols-outlined" onClick={()=> likePublication(item._id)}>thumb_up</span>
                                         <p>{item.likes.length}</p>
                                     </div>
-                                    <button onClick={() => handleShowComments(item._id)}>Comments({item.comments.length})</button>
+                                    <button onClick={() => handleModal(index)}>Comments({item.comments.filter((comment) => comment.aprobado).length})</button>
                                 </div>
                             </div>
-                            {item.show? 
+                            {showModal[index]? 
                             <div className={styles.comment__box}>
-                                {item.show && item.comments && item.comments.length > 0 && item.comments.map((comment) => (
-                                    <div key={comment._id} className={styles.comment__card}>
-                                        <Link to={comment.user == userId ? `/profile` : `/user/${comment.user}`}>
-                                            <img src={commentImage[comment.user]} alt="" className={styles.comment__image}/>
-                                            <p>{commentNick[comment.user]}:</p>
-                                        </Link>
+                                {showModal[index] && item.comments && item.comments.length > 0 && item.comments.map((comment) => (
+                                    comment.aprobado?
+                                        <div key={comment._id} className={styles.comment__card}>
+                                            <NavLink to={comment.user == userId ? `/profile` : `/user/${comment.user}`}>
+                                                <img src={commentImage[comment.user]} alt="" className={styles.comment__image}/>
+                                                <p>{commentNick[comment.user]}:</p>
+                                            </NavLink>
                                         <p>{comment.text}</p>
                                         {comment.user == userId?<span className={`material-symbols-outlined ${styles.comment__delete}`} onClick={()=> removeComment(item._id, comment._id)}>delete_forever</span> : ""}
                                     </div>
+                                    : ""
                                 ))}
                             </div>: ""}
                             {item.show?<div className={styles.newcomment__box}>

@@ -6,14 +6,14 @@ import { useState, useEffect} from 'react'
 import styles from '../styles/Profile.module.css'
 
 const UsersPage = () => {
-    const {token, setToken, userId} = useAuth()
+    const {token, setToken, userId, apiUrl} = useAuth()
     const [userData, setUserData] = useState({})
     const { id } = useParams();
 
     useEffect(() => {
         const userProfile = async() => {
             try {
-                const response = await axios.get(`http://localhost:5353/users/user/${id}`, {
+                const response = await axios.get(`${apiUrl}users/user/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -29,7 +29,7 @@ const UsersPage = () => {
 
     const addFriend = async() => {
         try {
-            const response = await axios.post(`http://localhost:5353/users/user/add`, {id}, {
+            const response = await axios.post(`${apiUrl}users/user/add`, {id}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

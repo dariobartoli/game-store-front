@@ -11,11 +11,11 @@ const Login = ({onClose}) => {
     const [password, setPassword] = useState("")
     const { token, setToken } = useAuth();
     const {isLogged, setIsLogged} = useAuth();
-    const {userId, setUserId} = useAuth();
+    const {userId, setUserId, apiUrl} = useAuth();
 
     
     const login = () => {
-        axios.post('http://localhost:5353/auth/login', { emailOrNick, password })
+        axios.post(`${apiUrl}auth/login`, { emailOrNick, password })
         .then(response => {
           setToken(response.data.token)
           localStorage.setItem('token', response.data.token);

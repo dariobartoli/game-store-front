@@ -94,6 +94,8 @@
 .publication__text__contain>p{
     color: rgb(33, 33, 33);
     text-indent: 0.5rem;
+    overflow-wrap: break-word;
+    padding-right: 8px;
 }
 .publication__text__contain>div{
     display: flex;

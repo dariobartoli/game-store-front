@@ -41,7 +41,6 @@ const Wishlist = () => {
         }
     }
     
-    console.log(wishlistData);
   return (
     <div className={styles.wishlist__container}>
         <div className={styles.main__container}>
@@ -53,8 +52,8 @@ const Wishlist = () => {
                             <h4>{item.gameName}</h4>
                             <p>${item.variant[0].price}</p>
                             <div>
-                                <Link to={`/store/${item._id}`}><span class={`material-symbols-outlined ${styles.span}`}>feature_search</span></Link>
-                                <span  class="material-symbols-outlined" onClick={() => removeToWishlist(item._id)}>delete</span>
+                                <Link to={`/store/${item._id}`}><span className={`material-symbols-outlined ${styles.span}`}>feature_search</span></Link>
+                                <span  className="material-symbols-outlined" onClick={() => removeToWishlist(item._id)}>delete</span>
                             </div>
                         </div>
                     </div>

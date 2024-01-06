@@ -7,12 +7,12 @@ import styles from '../styles/Store.module.css'
 
 const Store = () => {
     const [games, setGames] = useState([])
-    const {cartNumber, setCartNumber, wishlistNumber} = useAuth();
+    const {cartNumber, setCartNumber, wishlistNumber, apiUrl} = useAuth();
 
     useEffect(() => {
         const gamesData = async () => {
             try {
-              const response = await axios.get("http://localhost:5353/products");
+              const response = await axios.get(`${apiUrl}products`);
               setGames(response.data.products);
             } catch (error) {
               console.error('Error:', error.message);

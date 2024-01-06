@@ -5,12 +5,12 @@ import styles from '../styles/Logout.module.css'
 import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
-    const { token, setToken } = useAuth()
+    const { token, setToken, apiUrl } = useAuth()
     const navigate = useNavigate();
 
     const logout = async() => {
         try {
-            const response = await axios.delete('http://localhost:5353/auth/logout', {
+            const response = await axios.delete(`${apiUrl}auth/logout`, {
                 headers: {
                   'Authorization': `Bearer ${token}`
                 }
@@ -20,6 +20,7 @@ const Logout = () => {
             localStorage.removeItem("userId");
             localStorage.removeItem("deletedRequests")
             localStorage.removeItem('cart')
+            localStorage.removeItem('bg')
             navigate('/')
             window.location.reload()
         } catch (error) {

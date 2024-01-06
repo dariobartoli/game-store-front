@@ -163,6 +163,9 @@
     max-width: 600px;
     position: relative;
 }
+.review__box>p{
+    overflow-wrap: break-word;
+}
 .review__box>div{
     display: flex;
     align-items: center;
@@ -272,6 +275,7 @@
 }
 .review__textarea{
     resize: none;
+    padding: 4px;
 }
 .review__select{
     padding: 0.2rem;
