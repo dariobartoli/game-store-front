@@ -10,12 +10,13 @@ const Profile = () => {
   const [requests, setRequests] = useState([])
   const [viewRequest, setViewRequest] = useState(false)
   const [deletedRequests, setDeletedRequests] = useState(JSON.parse(localStorage.getItem('deletedRequests')) || [])
-  const { token, setToken, wishlistNumber, cartNumber, apiUrl, backgroundOld, setBackgroundOld } = useAuth();
+  const { token, setToken, wishlistNumber, cartNumber, apiUrl, backgroundOld, setBackgroundOld, wallet, setWallet } = useAuth();
   const [editModal, setEditModal] = useState(false)
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [nickName, setNickName] = useState("")
   const [password, setPassword] = useState("")
+  const [description, setDescription] = useState("")
   const [image, setImage] = useState("")
   const [userFriends, setUserFriends] = useState([])
   const [showFriend, setShowFriend] = useState(false)
@@ -23,7 +24,6 @@ const Profile = () => {
   const [showPublication, setShowPublication] = useState(false)
   const [backgroundShow, setBackgroundShow] = useState(false)
   const [backgroundSelect, setBackgroundSelect] = useState(null)
-  console.log(backgroundOld);
 
   
   useEffect(() => {
@@ -37,6 +37,10 @@ const Profile = () => {
         setProfile(response.data.user);
         if(backgroundOld == null){
           setBackgroundOld(response.data.user.background)
+        }
+        if(wallet == null){
+          setWallet(response.data.user.wallet)
+          localStorage.setItem('wl', response.data.user.wallet);
         }
       } catch (error) {
         console.error('Error:', error.response.data.message);
@@ -58,6 +62,7 @@ const Profile = () => {
     };
     publicationsData();
   }, [token]);
+
   
   useEffect(() => {
     if (profile && profile.friendRequest){
@@ -136,7 +141,7 @@ const Profile = () => {
   const updateProfileData = async(e) => {
     e.preventDefault()
     try {
-      const response = await axios.put(`${apiUrl}users`, {imagen:image, firstName:firstName, lastName:lastName, password:password, nickName:nickName}, {
+      const response = await axios.put(`${apiUrl}users`, {imagen:image, firstName:firstName, lastName:lastName, password:password, nickName:nickName, description: description}, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -144,6 +149,11 @@ const Profile = () => {
       })
       alert(response.data.message)
       setProfile(response.data.user);
+      setFirstName("")
+      setLastName("")
+      setPassword("")
+      setNickName("")
+      setDescription("")
       setEditModal(!editModal)
     } catch (error) {
       console.error('Error', error);
@@ -190,7 +200,6 @@ const Profile = () => {
   }
 
 
-
   return (
     <div className={styles.profile__container}>
       <div className={styles.main__container}>
@@ -204,7 +213,7 @@ const Profile = () => {
                   <p>Last name: <span>{profile.lastName}</span></p>
                   <p>Email: <span>{profile.email}</span></p>
                   <p>Nick: <span>{profile.nickName}</span></p>
-                  <p>Wallet: <span>${profile.wallet}</span> <span className={styles.add__funds}>ADD FUNDS</span></p>
+                  <p>Wallet: <span>${wallet}</span> <span className={styles.add__funds}>ADD FUNDS</span></p>
                   <button onClick={() => setBackgroundShow(!backgroundShow)}>cambiar balkground</button>
                 </div>
                 <span className={`material-symbols-outlined ${styles.edit__icon}`} onClick={()=> setEditModal(!editModal)}> edit</span>
@@ -306,6 +315,7 @@ const Profile = () => {
             <input type="text" placeholder='Change last name' onChange={e => setLastName(e.target.value)}/>
             <input type="password" placeholder='Change password' onChange={e => setPassword(e.target.value)}/>
             <input type="text" placeholder='Change nickname' onChange={e => setNickName(e.target.value)}/>
+            <input type="text" placeholder='Change description' onChange={e => setDescription(e.target.value)}/>
             <input type="file" name="" id="fileInput" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
             <button type='submit'>Update</button>
           </form>

@@ -45,13 +45,14 @@
     border: none;
     font-weight: bold;
     background-color: white;
-    color: tomato;
+    color: black;
     border-radius: 0.3rem;
     align-self: center;
     transition: 0.3s;
+    cursor: pointer;
 }
 .button__register:hover{
-    background-color: #ff8a76;
+    background-color: #fe4c2c;
     transition: 0.3s;
     color: white;
 }

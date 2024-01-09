@@ -46,6 +46,8 @@
     height: 150px;
     object-fit: cover;
     border-radius: 0.3rem;
+    border: 1px solid rgb(64, 64, 64);
+    box-shadow: 1px 1px 15px black;
 }
 
 .images{
@@ -185,6 +187,7 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    color: white;
 }
 .review__image{
     width: 40px;
@@ -281,11 +284,14 @@
     padding: 0.2rem;
     border: none;
     border-radius: 0.2rem;
-    border: 1px solid rgb(141, 141, 141);
+    border: 1px solid rgb(115, 115, 115);
     background-color: rgb(255, 255, 255);
-    color: tomato;
+    color: rgb(18, 18, 18);
     font-weight: bold;
     cursor: pointer;
+}
+.review__select:focus{
+    border-color: rgb(255, 71, 39);
 }
 .review__modal>div{
     display: flex;
@@ -297,32 +303,36 @@
     width: 110px;
     border: none;
     border-radius: 0.2rem;
-    border: 1px solid rgb(141, 141, 141);
-    background-color: rgb(255, 255, 255);
+    border: 1px solid #dbdbdb;
+    background-color: white;
     font-weight: bold;
-    color: tomato;
+    color: #181818;
     font-size: 0.9rem;
     cursor: pointer;
     transition: 0.2s;
 }
 .review__modal>div>button:hover{
-    background-color: rgb(255, 122, 99);
-    color: white;
-    transition: 0.2s;
-    border-color: tomato;
+    background-color: #fe4c2c;
+    border-color: #fe4c2c;
+    transition: 0.3s;
+    font-size: 0.9rem;
 }
 .review__remove__icon{
-    background-color: white;
-    color: #ff0c0c;
+    color: #ff1414;
     cursor: pointer;
     position: absolute;
-    top: 5px;
-    right: 5px;
-    border-radius: 50%;
+    top: 0px;
+    right: 0px;
+    border-bottom: 1px solid white;
+    border-left: 1px solid white;
+    background-color: white;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.2rem;
+    transition: all 0.3s;
 }
 .review__remove__icon:hover{
-    color: #ff3c3c;
-    scale: 1.1;
+    scale: 0.9;
+    transition: all 0.3s;
 }
 @media (min-width: 769px){
     .cover__image{
@@ -333,16 +343,16 @@
         gap: 5rem;
     }
     .info__contain>section>h4{
-        font-size: 1.7rem;
+        font-size: 1.4rem;
     }
     .game__title{
-        font-size: 3rem !important;
+        font-size: 2.3rem !important;
     }
     .subtitles{
-        font-size: 2.2rem !important;
+        font-size: 1.9rem !important;
     }
     .description{
-        font-size: 1.7rem;
+        font-size: 1.5rem;
     }
 }
 @media (min-width: 1025px){

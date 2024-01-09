@@ -9,7 +9,7 @@ const Cart = () => {
     const [cartData, setCartData] = useState([])
     const [updateData, setUpdateData] = useState(false)
     const [total, setTotal] = useState(0)
-    const {cartNumber, setCartNumber, setWishlistNumber} = useAuth();
+    const {cartNumber, setCartNumber, setWishlistNumber, wallet, setWallet} = useAuth();
     const { token, setToken, apiUrl } = useAuth();
 
     useEffect(() => {
@@ -78,6 +78,10 @@ const Cart = () => {
                 }
             })
             const wishlistLength = responseWishlist.data.wishlist.length
+            const total = response.data.total
+            const resultado = wallet - total
+            setWallet(resultado)
+            localStorage.setItem('wl', resultado)
             setWishlistNumber(wishlistLength)
             alert(response.data.message)
             setUpdateData(!updateData)
@@ -105,7 +109,10 @@ const Cart = () => {
                     </div>
                 })) : <p className={styles.cart__empty}>Cart is empty</p>}
                 {cartData.length>0?<div className={styles.cart__total__box}>
-                    <p className={styles.cart__total}>${total}</p>
+                    <div>
+                        <p className={styles.cart__total}>${total}</p>
+                        <p className={styles.cart__balance}>Your balance: <span>{wallet}</span></p>
+                    </div>
                     <div>
                         <button onClick={() => cleanCart()} className={styles.cart__button__clean}>Clean cart</button>
                         <button onClick={buyGames} className={styles.cart__button__buy}>Purchase</button>

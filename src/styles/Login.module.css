@@ -63,13 +63,13 @@
     border-radius: 0.3rem;
 }
 .button__login{
-    color: tomato;
+    color: #181818;
     font-weight: bold;
     transition: 0.5s;
 }
 .button__login:hover{
     color: white;
-    background-color: #ff8a76;
+    background-color: #fe4c2c;
     transition: 0.5s;
 }
 .button__register{

@@ -18,6 +18,12 @@
     gap: 2rem;
 }
 
+.main__container>h2{
+    text-decoration: underline;
+    font-size: 1.8rem;
+    text-shadow: 1px 1px 1px rgb(189, 189, 189);
+}
+
 .library__box{
     display: flex;
     justify-content: center;
@@ -30,8 +36,10 @@
     height: 145px;
     border-radius: 0.3rem;
     position: relative;
-    border: 1px rgba(255, 120, 97, 0.575) solid;
+    border: 1px solid #ff6528;
+    outline: 1px rgb(118, 118, 118) solid;
     cursor: pointer;
+    box-shadow: 0px 0px 4px white;
 }
 
 .library__image{

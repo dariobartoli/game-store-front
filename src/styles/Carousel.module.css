@@ -1,25 +1,29 @@
 .images__container{
     background-color: tomato;
-    padding: 0.1rem;
-    border-radius: 0.5rem;
+    padding: 0.2rem;
+    border-radius: 3px;
     width: 220px;
 }
-
 .image{
+    object-fit: cover;
     width: 100%;
-    height: 100%;
-    border-radius: 0.5rem;
+    height: 175px !important;
 }
 
 @media (min-width: 769px){
     .images__container{
-        padding: 0.1rem;
         width: 600px;
+    }
+    .image{
+        height: 400px !important;
     }
 }
 
 @media (min-width: 1600px){
     .images__container{
         width: 1000px;
+    }
+    .image{
+        height: 600px !important;
     }
 }

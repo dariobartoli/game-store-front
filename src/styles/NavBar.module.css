@@ -53,6 +53,7 @@
     top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
+    animation: modal 0.3s linear;
     z-index: 2;
 }
 
@@ -96,6 +97,10 @@
     scale: 1.4;
 }
 
+@keyframes modal {
+    from{top: -10%;}
+    to{top: 30%;}
+}
 
 @media (min-width: 769px){
     .hambur__icon{
@@ -139,3 +144,4 @@
         border-bottom: 1px tomato solid;
     }
 }
+

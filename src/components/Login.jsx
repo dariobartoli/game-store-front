@@ -29,6 +29,7 @@ const Login = ({onClose}) => {
         })
         .catch(error => {
           console.error('Error de inicio de sesión:', error);
+          alert(error.response.data.message)
         });
     }
 
@@ -39,24 +40,22 @@ const Login = ({onClose}) => {
     
 
   return (
-    <div>
-      <div className={styles.modal__container}>
-        <div className={styles.login__container}>
-          <div className={styles.input__container}>
-            <input type="text" placeholder='Email or Nick' value={emailOrNick} onChange={e => setEmailOrNick(e.target.value)} className={styles.login__input}/>
-            <input type="password" placeholder='Password' value={password} onChange={e => setPassword(e.target.value)} className={styles.login__input}/>
-          </div>
-          <div className={styles.button__container}>
-            <button onClick={login} className={`${styles.button} ${styles.button__login}`}>Login</button>
-            <button onClick={() => onClose(false, true)} className={`${styles.button} ${styles.button__register}`}>Register</button>
-          </div>
-          <h4 className={styles.forgot__password}>Forgot your password?</h4>
+    <div className={styles.modal__container}>
+      <div className={styles.login__container}>
+        <div className={styles.input__container}>
+          <input type="text" placeholder='Email or Nick' value={emailOrNick} onChange={e => setEmailOrNick(e.target.value)} className={styles.login__input}/>
+          <input type="password" placeholder='Password' value={password} onChange={e => setPassword(e.target.value)} className={styles.login__input}/>
         </div>
-        <div className={styles.qr__container}>
-          <img src="./img/qr.png" alt="" className={styles.qr}/>
+        <div className={styles.button__container}>
+          <button onClick={login} className={`${styles.button} ${styles.button__login}`}>Login</button>
+          <button onClick={() => onClose(false, true)} className={`${styles.button} ${styles.button__register}`}>Register</button>
         </div>
-        <div className={styles.close__modal} onClick={() => onClose()}><span className="material-symbols-outlined">close</span></div>
+        <h4 className={styles.forgot__password}>Forgot your password?</h4>
       </div>
+      <div className={styles.qr__container}>
+        <img src="./img/qr.png" alt="" className={styles.qr}/>
+      </div>
+      <div className={styles.close__modal} onClick={() => onClose()}><span className="material-symbols-outlined">close</span></div>
     </div>
   )
 }

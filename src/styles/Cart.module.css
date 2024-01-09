@@ -19,13 +19,16 @@
 
 .title{
     color: white;
+    text-decoration: underline;
+    font-size: 1.8rem;
 }
 
 .cart__image{
     width: 150px;
     height: 80px;
     object-fit: fill;
-    border-radius: 0.1rem;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
 }
 
 .cart__box{
@@ -36,49 +39,68 @@
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
+    border: 1px solid rgb(92, 92, 92);
+    box-shadow: 0px 0px 20px 2px black;
 }
 
 .cart__card{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-bottom: 1px rgb(91, 91, 91) solid;
+    border-bottom: 1px #e23d20 solid;
 }
 .cart__card__div{
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
 }
-.cart__card__div>p{
-    font-weight: bold;
+.cart__card>p{
+    color: white;
+    font-weight: 700;
+    text-shadow: 1px 1px 1px black;
 }
 .cart__card__div>span{
-    color: rgb(255, 34, 34);
+    color: #ff0d0d;
     padding-bottom: 0.5rem;
     cursor: pointer;
+    transition: all 0.3s;
+
 }
 .cart__card__div>span:hover{
-    color: #ff4b4b;
+    color: white;
+    scale: 0.9;
+    transition: all 0.3s;
 }
 .cart__total__box{
     padding-top: 0.5rem;
     align-self: flex-end;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 .cart__total{
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     text-align: end;
     color: rgb(0, 0, 0);
-    background-color: rgb(255, 87, 58);
+    background-color: #ff7a63;
+    border: 1px solid #f24c2f;
     border-radius: 0.3rem;
-    padding: 2px;
+    padding: 1px;
 }
-.cart__total__box>div{
+.cart__total__box>div:nth-child(1){
     display: flex;
+    flex-direction: column;
+    align-self: flex-end !important;
+}
+.cart__total__box>div:nth-child(2){
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 2rem;
+}
+.cart__balance{
+    font-size: 0.8rem;
 }
 .cart__total__box>div>button{
     width: 100px;
@@ -86,18 +108,19 @@
     border: none;
     font-weight: bold;
     border-radius: 0.3rem;
-    border: 1px solid rgb(160, 160, 160);
+    border: 1px solid rgb(194, 194, 194);
+    background-color: white;
     transition: 0.3s;
     cursor: pointer;
 }
 .cart__button__clean:hover{
-    border-color: #ff4b4b;
-    background-color: #ff4b4b;
+    border-color: #ff3a3a;
+    background-color: #ff3a3a;
     transition: 0.3s;
 }
 .cart__button__buy:hover{
-    border-color: rgb(255, 117, 93);
-    background-color: rgb(255, 117, 93);
+    border-color: #fe4c2c;
+    background-color: #fe4c2c;
     transition: 0.3s;
 }
 .cart__empty{

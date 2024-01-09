@@ -21,6 +21,7 @@ const Logout = () => {
             localStorage.removeItem("deletedRequests")
             localStorage.removeItem('cart')
             localStorage.removeItem('bg')
+            localStorage.removeItem('wl')
             navigate('/')
             window.location.reload()
         } catch (error) {

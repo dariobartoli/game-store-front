@@ -8,7 +8,7 @@ import styles from '../styles/Wishlist.module.css'
 const Wishlist = () => {
     const [wishlistData, setWishlistData] = useState([])
     const [updateWishlist, setUpdateWishlist] = useState(false)
-    const { token, setToken, wishlistNumber, setWishlistNumber } = useAuth();
+    const { token, setToken, wishlistNumber, setWishlistNumber, updateDataContext, setUpdateDataContext } = useAuth();
 
     useEffect(() => {
         const wishlistGetData = async() => {
@@ -36,6 +36,7 @@ const Wishlist = () => {
             setUpdateWishlist(!updateWishlist)
             const updateData = parseInt(wishlistNumber) - 1
             setWishlistNumber(updateData)
+            setUpdateDataContext(updateDataContext => !updateDataContext)
         } catch (error) {
             console.error('Error:', error.message);
         }

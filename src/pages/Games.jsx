@@ -14,10 +14,11 @@ const Games = () => {
     const [reviewText, setReviewText] = useState("")
     const [reviewRecommended, setReviewRecommended] = useState(true)
     const { id } = useParams();
-    const { token, setToken, userId, apiUrl} = useAuth();
+    const { token, setToken, userId, apiUrl, profileData} = useAuth();
     const [users, setUsers] = useState([]);
-    const {cartNumber, setCartNumber, wishlistNumber, setWishlistNumber} = useAuth();
+    const {cartNumber, setCartNumber, wishlistNumber, setWishlistNumber, setUpdateDataContext, updateDataContext} = useAuth();
     const [reload, setReload] = useState(false)
+
 
 
     useEffect(() => {
@@ -51,6 +52,7 @@ const Games = () => {
             })
             const updateData = parseInt(wishlistNumber) + 1
             setWishlistNumber(updateData)
+            setUpdateDataContext(updateDataContext => !updateDataContext)
             alert(response.data.message)
         } catch (error) {
             console.error('Error:', error);
@@ -66,6 +68,7 @@ const Games = () => {
             })
             const updateCart = parseInt(cartNumber) + 1
             setCartNumber(updateCart)
+            setUpdateDataContext(!updateDataContext)
             alert(response.data.message)
         } catch (error) {
             console.error('Error:', error);
@@ -126,7 +129,17 @@ const Games = () => {
             alert(error.response.data.message)
         }
     }
+    
 
+    /* CODIGO PARA VERIFICAR SI UN JUEGO YA ESTÁ EN AL WISHLIST, CART O LIBRARY */
+
+    let inLibrary
+    let inWishlist
+    if(profileData != null){
+        inLibrary = profileData.games.includes(game._id)
+        inWishlist = profileData.wishlist.includes(game._id)
+    }
+    console.log(inWishlist);
 
   return (
     <div className={styles.games__container}>
@@ -162,10 +175,10 @@ const Games = () => {
                                     return <section key={item._id}>
                                         <h4>{item.edition}:</h4>
                                         <p className={styles.text}>$ {item.price}</p>
-                                        <button onClick={() => addToCart(game._id, item._id)} className={styles.button__cart}>Add to Cart</button>
+                                        {inLibrary != undefined && inLibrary? <p>In your library</p> : <button onClick={() => addToCart(game._id, item._id)} className={styles.button__cart}>Add to Cart</button>}
                                     </section>
                                 })) : ("")}
-                                <button onClick={() => addWishlist(game._id)} className={styles.button__wish}>Add to your wishlist</button>
+                                {inWishlist != undefined && inWishlist? <p>In your wishlist</p> : <button onClick={() => addWishlist(game._id)} className={styles.button__wish}>Add to your wishlist</button>}
                             </div>
                         </div>
                         <Carousel images={game.images}/>

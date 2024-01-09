@@ -12,6 +12,9 @@ export function AuthProvider({ children }) {
   const [cartNumber, setCartNumber] = useState(0)
   const [wishlistNumber, setWishlistNumber] = useState(0)
   const [backgroundOld, setBackgroundOld] = useState(localStorage.getItem('bg') || null)
+  const [wallet, setWallet] = useState(localStorage.getItem('wl') || null)
+  const [profileData, setProfileData] = useState(null)
+  const [updateDataContext, setUpdateDataContext] = useState(false)
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -44,14 +47,27 @@ export function AuthProvider({ children }) {
           console.error('Error:', error);
         }
       };
+      const getProfileData = async () => {
+        try {
+          const response = await axios.get(`${apiUrl}users`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          setProfileData(response.data.user);
+        } catch (error) {
+          console.error('Error:', error.response.data.message);
+        }
+      };
+      getProfileData();
       wishlistNum();
       getCartData()
     }
-}, [token])
+}, [token, updateDataContext])
 
 
   return (
-    <AuthContext.Provider value={{ token, setToken, isLogged, setIsLogged, userId, setUserId, cartNumber, setCartNumber, wishlistNumber, setWishlistNumber, apiUrl, backgroundOld, setBackgroundOld}}>
+    <AuthContext.Provider value={{ token, setToken, isLogged, setIsLogged, userId, setUserId, cartNumber, setCartNumber, wishlistNumber, setWishlistNumber, apiUrl, backgroundOld, setBackgroundOld, wallet, setWallet, profileData, updateDataContext, setUpdateDataContext}}>
       {children}
     </AuthContext.Provider>
   );

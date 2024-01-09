@@ -115,22 +115,7 @@ const Publications = () => {
         }
     }
 
-    const handleShowComments = async(id) => {
-        try {
-            const response = await axios.put(`${apiUrl}publications/show`, {id},{
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
-            })
-            setReload(!reload)
-        } catch (error) {
-            console.error('Error', error);
-        }
-    }
-
-    const [modo, setModo] = useState(false)
-
-
+    //MANEJAR LOS COMENTARIOS DE CADA PUBLICACIÓN
     const [showModal, setShowModal] = useState(new Array(publications.length).fill(false))
     
     const handleModal = (index) => {
@@ -206,7 +191,10 @@ const Publications = () => {
             <form id="publicationForm" encType="multipart/form-data" onSubmit={createPublish} className={styles.publication__form}>
                 <input type="text" placeholder='Title' id="title" onChange={e => setTitle(e.target.value)}/>
                 <textarea name="" id="description" cols="30" rows="10" onChange={e => setDescription(e.target.value)} className={styles.form__textarea} placeholder='description'></textarea>
-                <input type="file" id="fileInput2" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
+                <label htmlFor="file-upload" className={styles.custom_file_upload}>
+                    Seleccionar Archivo
+                </label>
+                <input type="file" id="file-upload" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
                 <button type='submit'>Publish</button>
             </form>
             <div className={styles.publication__box}>
@@ -215,19 +203,29 @@ const Publications = () => {
                     const date = item.createdAt.split('T')
                     const date2 = date[0].split('-')
                     const date3 = date2[1]+ "-"+date2[2]+"-"+ date2[0]
+                    const hour = date[1].split('.')
+                    const hour2 = hour[0].split(':')
+                    const hour3 = hour2[0]+ ':' +hour2[1]
+                    const fecha = hour3 + '/' + date3
                     return <div key={item._id} className={styles.publication__card}>
                         <div className={styles.image__container}>
                             <img src={item.images} alt="" className={styles.publication__image}/>
                         </div>
                         <div className={styles.publication__info__contain}>
-                            {author?<NavLink className={styles.author__box} to={item.user == userId ? `/profile` : `/user/${item.user}`}>
-                                <img src={author.profileImage} alt="" className={styles.publication__profile__image}/>
-                                <p>{author.nickName}</p>
-                            </NavLink> : ""}
+                            <div className={styles.publication__head}>
+                                {author?<NavLink className={styles.author__box} to={item.user == userId ? `/profile` : `/user/${item.user}`}>
+                                    <img src={author.profileImage} alt="" className={styles.publication__profile__image}/>
+                                    <p>{author.nickName}</p>
+                                </NavLink> : ""}
+                                <div className={styles.date__container}>
+                                    <p className={styles.publication__date}>{hour3}</p>
+                                    <p className={styles.publication__date}>{date3}</p>
+                                </div>
+                            </div>
                             <div className={styles.publication__text__contain}>
                                 <div>
                                     <h4>{item.title}</h4>
-                                    <p className={styles.publication__date}>{date3}</p>
+                                    {item.user == userId? <span className={`material-symbols-outlined ${styles.publication__delete}`} onClick={()=> removePublication(item._id)}>delete</span> : ""}
                                 </div>
                                 <p>{item.text}</p>
                                 <div>
@@ -243,13 +241,15 @@ const Publications = () => {
                                 {showModal[index] && item.comments && item.comments.length > 0 && item.comments.map((comment) => (
                                     comment.aprobado?
                                         <div key={comment._id} className={styles.comment__card}>
-                                            <NavLink to={comment.user == userId ? `/profile` : `/user/${comment.user}`}>
-                                                <img src={commentImage[comment.user]} alt="" className={styles.comment__image}/>
-                                                <p>{commentNick[comment.user]}:</p>
-                                            </NavLink>
-                                        <p>{comment.text}</p>
-                                        {comment.user == userId?<span className={`material-symbols-outlined ${styles.comment__delete}`} onClick={()=> removeComment(item._id, comment._id)}>delete_forever</span> : ""}
-                                    </div>
+                                            <div>
+                                                <NavLink to={comment.user == userId ? `/profile` : `/user/${comment.user}`}>
+                                                    <img src={commentImage[comment.user]} alt="" className={styles.comment__image}/>
+                                                    <p>{commentNick[comment.user]}:</p>
+                                                </NavLink>
+                                            </div>
+                                            <p>{comment.text}</p>
+                                            {comment.user == userId?<span className={`material-symbols-outlined ${styles.comment__delete}`} onClick={()=> removeComment(item._id, comment._id)}>delete_forever</span> : ""}
+                                        </div>
                                     : ""
                                 ))}
                             </div>: ""}
@@ -259,7 +259,6 @@ const Publications = () => {
                             </div>: ""}
 
                         </div>
-                        {item.user == userId? <span className={`material-symbols-outlined ${styles.publication__delete}`} onClick={()=> removePublication(item._id)}>delete</span> : ""}
                         
                     </div>
                 }) : (<p>Don't found publications</p>)}

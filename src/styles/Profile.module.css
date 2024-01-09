@@ -321,6 +321,12 @@
     top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
+    border: 1px solid rgb(77, 77, 77);
+    animation: moveFriends 0.5s linear;
+}
+@keyframes moveFriends {
+    from{clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);}
+    to{clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);}
 }
 .friends__box>span{
     color: black;
@@ -341,12 +347,16 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-image: linear-gradient(to right, #575757, #5e5e5e, #646464, #6b6b6b, #727272);
+    background: rgb(94, 94, 94);
+    border: 1px solid rgb(88, 88, 88);
     padding: 5px;
     border-radius: 0.2rem;
 }
 .friends__card:hover{
-    background-image: linear-gradient(to left, #575757, #5e5e5e, #646464, #6b6b6b, #727272);
+    filter: brightness(115%);
+}
+.friends__card:hover>a>p{
+    color: rgb(255, 86, 56);
 }
 .friends__card>a{
     display: flex;
@@ -365,12 +375,13 @@
 }
 .friends__card>span{
     align-self: flex-start;
-    color: rgb(255, 55, 0);
-    transition: 0.2s;
+    color: #ff1414;
+    transition: 0.3s;
 }
 .friends__card>span:hover{
-    color: rgb(164, 25, 25);
-    transition: 0.2s;
+    color: white;
+    scale: 0.9;
+    transition: 0.3s;
 }
 
 .publication__box{
@@ -378,7 +389,7 @@
     position: fixed;
     transform: translate(-50%, 0%);
     left: 50%;
-    top: 11%;
+    bottom: 15%;
     width: 90%;
     max-width: 700px;
     padding: 1rem;
@@ -389,43 +400,54 @@
     flex-direction: column;
     gap: 1.1rem;
     overflow: auto;
+    border: 1px rgb(57, 57, 57) solid;
+    animation: moveFriends 0.5s linear;
+}
+@keyframes moveModal {
+    from{bottom: -30%;}
+    to{bottom: 15%;}
 }
 .publication__box>span{
     align-self: flex-end;
     color: black;
     cursor: pointer;
-    transition: 2s;
+    transition: 0.5s;
 }
 .publication__box>span:hover{
-    color: rgb(65, 65, 65);
-    transition: 2s;
+    color: rgb(255, 255, 255);
+    scale: 0.9;
+    transition: 0.5s;
 }
 .publication__card{
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
-    background-color: rgba(152, 152, 152, 0.55);
+    background-color: #646464;
     padding: 0.5rem;
     border-radius: 0.3rem;
+    border: 1px solid rgb(93, 93, 93);
 }
 .publication__card >:nth-child(1){
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    color: black;
+    color: white;
     display: flex;
     justify-content: space-between;
+    text-shadow: 1px 1px 1px black;
+    border-bottom: 1px solid rgb(154, 154, 154);
 }
 .publication__card >:nth-child(2){
-    font-size: 1.1rem;
-    text-indent: 0.8rem;
-    color: rgb(55, 55, 55);
+    font-size: 1rem;
+    color: rgb(33, 33, 33);
+    overflow-wrap: break-word;
+    padding-top: 3px;
 }
 .publication__card >div{
     display: flex;
     align-items: center;
     gap: 1rem;
     padding-top: 0.2rem;
-    color: rgb(0, 0, 0);
+    color: #222222;
 }
 .publication__card >div>div{
     display: flex;
@@ -433,7 +455,7 @@
     gap: 0.2rem;
 }
 .publication__card >div>div>span{
-    color: orangered;
+    color: #ff2727;
 }
 .publication__box>p{
     text-align: center;
