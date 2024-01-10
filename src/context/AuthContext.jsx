@@ -32,18 +32,6 @@ export function AuthProvider({ children }) {
               console.error('Error:', error.message);
           }
       }
-      const wishlistNum = async () => {
-        try {
-          const response = await axios.get(`${apiUrl}users`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          setWishlistNumber(response.data.user.wishlist.length);
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
       const getProfileData = async () => {
         try {
           const response = await axios.get(`${apiUrl}users`, {
