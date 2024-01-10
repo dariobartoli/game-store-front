@@ -4,8 +4,8 @@ import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import { Link } from "react-router-dom";
 import styles from '../styles/Store.module.css'
-import 'atropos/css'
-import Atropos from 'atropos/react';
+/* import 'atropos/css'
+import Atropos from 'atropos/react'; */
 
 
 const Store = () => {
@@ -24,6 +24,27 @@ const Store = () => {
         gamesData()
     }, [])
 
+/*     return <Link to={`/store/${item._id}`} key={item._id}>
+    <div id="app">
+      <Atropos
+        activeOffset={5}
+        shadowScale={1.05}
+        rotateXMax={1}
+        rotateYMax={1}
+      >
+        <div className={styles.card__games}>
+          <div className={styles.image__container}> 
+            <img src={item.coverImage} alt="" className={styles.store__image}/>
+            <div className={styles.cover__div}></div>
+          </div>
+          <div className={`${styles.text__container}`}>
+            <p>$ {item.variant[0].price}</p>
+          </div>
+        </div>
+      </Atropos>
+    </div>
+</Link> */
+
 
 
   return (
@@ -39,13 +60,6 @@ const Store = () => {
           {games ? (
           games.map((item) => {
               return <Link to={`/store/${item._id}`} key={item._id}>
-                    <div id="app">
-                      <Atropos
-                        activeOffset={5}
-                        shadowScale={1.05}
-                        rotateXMax={1}
-                        rotateYMax={1}
-                      >
                         <div className={styles.card__games}>
                           <div className={styles.image__container}> 
                             <img src={item.coverImage} alt="" className={styles.store__image}/>
@@ -55,9 +69,6 @@ const Store = () => {
                             <p>$ {item.variant[0].price}</p>
                           </div>
                         </div>
-                      </Atropos>
-                    </div>
-
               </Link>
           })) : <p style={{color: "white"}}>Cargando</p>} 
         </div>
