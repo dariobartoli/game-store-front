@@ -18,7 +18,7 @@ const Store = () => {
               const response = await axios.get(`${apiUrl}products`);
               setGames(response.data.products);
             } catch (error) {
-              console.error('Error:', error.message);
+              console.error('Error:', error.response.data.message);
             }
           };
         gamesData()

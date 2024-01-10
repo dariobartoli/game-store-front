@@ -178,7 +178,7 @@ const Publications = () => {
         try {
             swal({
                 title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this friend request",
+                text: "Once deleted, you will not be able to recover this publication",
                 icon: "warning",
                 buttons: {
                   cancel: true,
@@ -218,7 +218,7 @@ const Publications = () => {
         try {
             swal({
                 title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this friend request",
+                text: "Once deleted, you will not be able to recover this comment",
                 icon: "warning",
                 buttons: {
                   cancel: true,

@@ -7,12 +7,12 @@ import styles from '../styles/Wishlist.module.css'
 
 const Wishlist = () => {
     const [wishlistData, setWishlistData] = useState([])
-    const { token, updateDataContext, setUpdateDataContext } = useAuth();
+    const { token, updateDataContext, setUpdateDataContext, apiUrl } = useAuth();
 
     useEffect(() => {
         const wishlistGetData = async() => {
             try {
-                const response = await axios.get('http://localhost:5353/wishlist', {
+                const response = await axios.get(`${apiUrl}wishlist`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -27,7 +27,7 @@ const Wishlist = () => {
 
     const removeToWishlist = async (id) => {
         try {
-            const response = await axios.delete(`http://localhost:5353/wishlist/${id}`, {
+            const response = await axios.delete(`${apiUrl}wishlist/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
