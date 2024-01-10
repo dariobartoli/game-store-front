@@ -14,9 +14,9 @@ const Games = () => {
     const [reviewText, setReviewText] = useState("")
     const [reviewRecommended, setReviewRecommended] = useState(true)
     const { id } = useParams();
-    const { token, setToken, userId, apiUrl, profileData} = useAuth();
+    const { token, userId, apiUrl, profileData, isLogged} = useAuth();
     const [users, setUsers] = useState([]);
-    const {cartNumber, setCartNumber, wishlistNumber, setWishlistNumber, setUpdateDataContext, updateDataContext} = useAuth();
+    const {cartNumber, setCartNumber, setUpdateDataContext, updateDataContext} = useAuth();
     const [reload, setReload] = useState(false)
 
 
@@ -50,13 +50,21 @@ const Games = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            const updateData = parseInt(wishlistNumber) + 1
-            setWishlistNumber(updateData)
             setUpdateDataContext(updateDataContext => !updateDataContext)
-            alert(response.data.message)
+            swal({
+                title: "Success",
+                text: response.data.message,
+                icon: "success",
+                button: "Close",
+            });
         } catch (error) {
             console.error('Error:', error);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
     }
     const addToCart = async(id, variant) => {
@@ -69,10 +77,20 @@ const Games = () => {
             const updateCart = parseInt(cartNumber) + 1
             setCartNumber(updateCart)
             setUpdateDataContext(!updateDataContext)
-            alert(response.data.message)
+            swal({
+                title: "Success",
+                text: response.data.message,
+                icon: "success",
+                button: "Close",
+            });
         } catch (error) {
             console.error('Error:', error);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
     }
 
@@ -108,25 +126,59 @@ const Games = () => {
                 }
             })
             setReviewModal(!reviewModal)
-            alert(response.data.message)
+            swal({
+                title: "Success",
+                text: response.data.message,
+                icon: "success",
+                button: "Close",
+            });
         } catch (error) {
             console.error('Error', error);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
     }
 
     const removeReview = async(id) => {
         try {
-            const response = await axios.delete(`${apiUrl}reviews/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this friend request",
+                icon: "warning",
+                buttons: {
+                  cancel: true,
+                  confirm: true,
+                  confirm: "Sure",
+                },
+                dangerMode: true,
+            }).then(async (willDelete) => {
+                if (willDelete) {
+                    const response = await axios.delete(`${apiUrl}reviews/${id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    setReload(!reload)
+                    swal({
+                    title: "Success",
+                    text: response.data.message,
+                    icon: "success",
+                    button: "Close",
+                    });
                 }
-            })
-            alert(response.data.message)
-            setReload(!reload)
+            });
         } catch (error) {
             console.error('Error', error);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+                });
         }
     }
     
@@ -139,15 +191,16 @@ const Games = () => {
         inLibrary = profileData.games.includes(game._id)
         inWishlist = profileData.wishlist.includes(game._id)
     }
-    console.log(inWishlist);
 
   return (
     <div className={styles.games__container}>
         <div className={styles.main__container}>
+            {isLogged? 
             <div className={styles.cart__wish__contain}>
                 <Link to={'/cart'} className={styles.cart__icon}><span className={`material-symbols-outlined ${styles.cart}`}>shopping_cart</span><p>{cartNumber}</p></Link>
-                <Link to={'/profile/wishlist'} className={styles.wishlistNum}>Wishlist<span>({wishlistNumber})</span></Link>
+                <Link to={'/profile/wishlist'} className={styles.wishlistNum}>Wishlist<span>({profileData? profileData.wishlist.length : null})</span></Link>
             </div>
+            : null}
             <div className={styles.games__box}>
                 {game ? (
                     <div>
@@ -175,10 +228,10 @@ const Games = () => {
                                     return <section key={item._id}>
                                         <h4>{item.edition}:</h4>
                                         <p className={styles.text}>$ {item.price}</p>
-                                        {inLibrary != undefined && inLibrary? <p>In your library</p> : <button onClick={() => addToCart(game._id, item._id)} className={styles.button__cart}>Add to Cart</button>}
+                                        {inLibrary != undefined && inLibrary? <p className={styles.game__mine} >In your library</p> : <button onClick={() => addToCart(game._id, item._id)} className={styles.button__cart}>Add to Cart</button>}
                                     </section>
                                 })) : ("")}
-                                {inWishlist != undefined && inWishlist? <p>In your wishlist</p> : <button onClick={() => addWishlist(game._id)} className={styles.button__wish}>Add to your wishlist</button>}
+                                {inWishlist != undefined && inWishlist? <p className={styles.game__mine} >In your wishlist</p> : <button onClick={() => addWishlist(game._id)} className={styles.button__wish}>Add to your wishlist</button>}
                             </div>
                         </div>
                         <Carousel images={game.images}/>

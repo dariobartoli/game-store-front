@@ -6,7 +6,7 @@ import { useState, useEffect} from 'react'
 import styles from '../styles/Profile.module.css'
 
 const UsersPage = () => {
-    const {token, setToken, userId, apiUrl} = useAuth()
+    const {token, userId, apiUrl} = useAuth()
     const [userData, setUserData] = useState({})
     const { id } = useParams();
 
@@ -34,10 +34,20 @@ const UsersPage = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            alert(response.data.message)
+            swal({
+                title: "Success",
+                text: response.data.message,
+                icon: "success",
+                button: "Close",
+            });
         } catch (error) {
             console.error('Error:', error);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
     }
 
@@ -46,7 +56,7 @@ const UsersPage = () => {
   return (
     <div className={styles.profile__container}>
         <div className={styles.main__container}>
-            <div className={`${styles.wallpaper} ${styles.wallpaper__users}`}>
+            <div className={styles.wallpaper} style={userData? {backgroundImage: `url(${userData.background})`} : null}>
                 <div className={styles.profile__data}>
                     <div className={styles.profile__card}>
                         <img src={userData.profileImage} alt="" className={styles.profile__image}/>
@@ -59,17 +69,20 @@ const UsersPage = () => {
                             <p></p>
                         </div>
                     </div>
-                    <div className={styles.user__links__div}>
-                        <span className="material-symbols-outlined">group</span>
-                        <p>Friends</p>
-                    </div>
-                    <div className={styles.user__links__div}>
-                        <span className="material-symbols-outlined">casino</span>
-                        <p>Games</p>
-                    </div>
-                    <div className={styles.user__links__div}>
-                        <span className="material-symbols-outlined">list_alt</span>
-                        <p>Publications</p>
+                    {userData && userData.description? <p className={styles.user__description}>{userData.description}</p> : <p className={styles.user__description}>User don't has description</p>}
+                    <div className={styles.user__links__container}>
+                        <div className={styles.user__links__div}>
+                            <span className="material-symbols-outlined">group</span>
+                            <p>Friends</p>
+                        </div>
+                        <div className={styles.user__links__div}>
+                            <span className="material-symbols-outlined">casino</span>
+                            <p>Games</p>
+                        </div>
+                        <div className={styles.user__links__div}>
+                            <span className="material-symbols-outlined">list_alt</span>
+                            <p>Publications</p>
+                        </div>
                     </div>
                 </div>
             </div>

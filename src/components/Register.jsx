@@ -15,11 +15,21 @@ const Register = ({onClose}) => {
   const registerInApp = async()=> {
     try {
       const response = await axios.post(`${apiUrl}auth/register`, {firstName, lastName, email, password})
-      alert("register successful")
+      swal({
+        title: "Success",
+        text: response.data.message,
+        icon: "success",
+        button: "Close",
+      });
       onClose()
     } catch (error) {
       console.error('Error de inicio de sesión:', error);
-      alert(error.response.data.message)
+      swal({
+        title: "Error",
+        text: error.response.data.message,
+        icon: "error",
+        button: "Close",
+    });
     }
   }
   return (
@@ -42,6 +52,9 @@ const Register = ({onClose}) => {
           <div className={styles.input__box}>
             <label htmlFor="password">Password:</label>
             <input type="password" id='password' value={password} onChange={e => setPassword(e.target.value)}/>
+          </div>
+          <div>
+            <p className={styles.bad__password}>Password must contain (minus, mayus, number), 8 characters minimum</p>
           </div>
         </div>
         <input type="submit" value="Register" onClick={registerInApp} className={styles.button__register}/>

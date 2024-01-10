@@ -91,10 +91,20 @@ const Publications = () => {
             })
             setNewComment("")
             setReload(!reload)
-            alert(response.data.message)
+            swal({
+                title: "Success",
+                text: response.data.message,
+                icon: "success",
+                button: "Close",
+            });
         } catch (error) {
             console.error('Error', error);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
     }
 
@@ -107,11 +117,21 @@ const Publications = () => {
                     'Content-Type': 'multipart/form-data',
                 }
             })
-            alert(response.data.message);
             setReload(!reload)
+            swal({
+                title: "Success",
+                text: response.data.message,
+                icon: "success",
+                button: "Close",
+            });
         } catch (error) {
             console.error('Error', error);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
     }
 
@@ -156,31 +176,81 @@ const Publications = () => {
 
       const removePublication = async(id) => {
         try {
-            const response = await axios.delete(`${apiUrl}publications/${id}`,{
-                headers: {
-                    'Authorization': `Bearer ${token}`,
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this friend request",
+                icon: "warning",
+                buttons: {
+                  cancel: true,
+                  confirm: true,
+                  confirm: "Sure",
+                },
+                dangerMode: true,
+              })
+              .then(async (willDelete) => {
+                if (willDelete) {
+                    const response = await axios.delete(`${apiUrl}publications/${id}`,{
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        }
+                    })
+                    setReload(!reload)
+                    swal({
+                        title: "Success",
+                        text: response.data.message,
+                        icon: "success",
+                        button: "Close",
+                    });
                 }
-            })
-            setReload(!reload)
-            alert(response.data.message)
+              });
         } catch (error) {
             console.error('Error', error);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
       }
 
       const removeComment = async(publicationId, commentId) => {
         try {
-            const response = await axios.put(`${apiUrl}publications/comment/remove`, {publicationId, commentId}, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this friend request",
+                icon: "warning",
+                buttons: {
+                  cancel: true,
+                  confirm: true,
+                  confirm: "Sure",
+                },
+                dangerMode: true,
+              })
+              .then(async (willDelete) => {
+                if (willDelete) {
+                    const response = await axios.put(`${apiUrl}publications/comment/remove`, {publicationId, commentId}, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        }
+                    })
+                    setReload(!reload)
+                    swal({
+                        title: "Success",
+                        text: response.data.message,
+                        icon: "success",
+                        button: "Close",
+                    });
                 }
-            })
-            setReload(!reload)
-            alert(response.data.message)
+              });
         } catch (error) {
             console.error('Error', error);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
       }
 
@@ -192,7 +262,7 @@ const Publications = () => {
                 <input type="text" placeholder='Title' id="title" onChange={e => setTitle(e.target.value)}/>
                 <textarea name="" id="description" cols="30" rows="10" onChange={e => setDescription(e.target.value)} className={styles.form__textarea} placeholder='description'></textarea>
                 <label htmlFor="file-upload" className={styles.custom_file_upload}>
-                    Seleccionar Archivo
+                    Select file
                 </label>
                 <input type="file" id="file-upload" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
                 <button type='submit'>Publish</button>
@@ -253,7 +323,7 @@ const Publications = () => {
                                     : ""
                                 ))}
                             </div>: ""}
-                            {item.show?<div className={styles.newcomment__box}>
+                            {showModal[index]?<div className={styles.newcomment__box}>
                                 <textarea type="text" placeholder='add comment' value={newComment} onChange={e => setNewComment(e.target.value)}/>
                                 <button onClick={() => addComment(item._id)}>Comment</button>
                             </div>: ""}

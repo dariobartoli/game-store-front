@@ -2,15 +2,13 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
-import { Link } from 'react-router-dom'
 import styles from '../styles/Cart.module.css'
 
 const Cart = () => {
     const [cartData, setCartData] = useState([])
-    const [updateData, setUpdateData] = useState(false)
     const [total, setTotal] = useState(0)
-    const {cartNumber, setCartNumber, setWishlistNumber, wallet, setWallet} = useAuth();
-    const { token, setToken, apiUrl } = useAuth();
+    const {cartNumber, setCartNumber, profileData, updateDataContext, setUpdateDataContext} = useAuth();
+    const { token, apiUrl } = useAuth();
 
     useEffect(() => {
         const getCartData = async() => {
@@ -34,7 +32,7 @@ const Cart = () => {
             }
         }
         getCartData()
-    }, [updateData])
+    }, [updateDataContext])
     
     const removeToCart = async(id) => {
         try {
@@ -43,52 +41,92 @@ const Cart = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            setUpdateData(!updateData)
+            setUpdateDataContext(!updateDataContext)
             const updateCart = parseInt(cartNumber) - 1
             setCartNumber(updateCart)
         } catch (error) {
             console.error('Error:', error.message);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
     }
 
     const cleanCart = async ()=> {
         try {
-            const response = await axios.delete(`${apiUrl}carts/clean`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+            swal({
+                title: "Are you sure?",
+                text: "You are about to empty your entire shopping cart.",
+                icon: "warning",
+                buttons: {
+                  cancel: true,
+                  confirm: true,
+                  confirm: "Sure",
+                },
+                dangerMode: true,
+              })
+              .then(async (willDelete) => {
+                if (willDelete) {
+                    const response = await axios.delete(`${apiUrl}carts/clean`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    setUpdateDataContext(!updateDataContext)
+                    setCartNumber(0)
+                    swal({
+                        title: "Success",
+                        text: response.data.message,
+                        icon: "success",
+                        button: "Close",
+                    });
                 }
-            })
-            setUpdateData(!updateData)
-            setCartNumber(0)
+              });
         } catch (error) {
             console.error('Error:', error.message);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
     }
 
-    const buyGames = async() => {
+    const buyGames = () => {
         try {
-            const response = await axios.delete(`${apiUrl}carts/purchase`, {
-                headers: {
-                    'authorization': `Bearer ${token}`
-                }
+            swal({
+                timer:2500,
+                text: "Making the purchase, please wait",
+                buttons: false,
+                closeOnClickOutside: false,
+                closeOnEsc: false,
+            }).then(async() => {
+                const response = await axios.delete(`${apiUrl}carts/purchase`, {
+                    headers: {
+                        'authorization': `Bearer ${token}`
+                    }
+                })
+                setUpdateDataContext(!updateDataContext)
+                setCartNumber(0)
+                swal({
+                    title: "Success",
+                    text: response.data.message,
+                    icon: "success",
+                    button: "Close",
+                });
             })
-            const responseWishlist = await axios.get(`${apiUrl}wishlist`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            const wishlistLength = responseWishlist.data.wishlist.length
-            const total = response.data.total
-            const resultado = wallet - total
-            setWallet(resultado)
-            localStorage.setItem('wl', resultado)
-            setWishlistNumber(wishlistLength)
-            alert(response.data.message)
-            setUpdateData(!updateData)
-            setCartNumber(0)
         } catch (error) {
             console.error('Error:', error.message);
-            alert(error.response.data.message)
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error",
+                button: "Close",
+            });
         }
     }
     
@@ -111,7 +149,7 @@ const Cart = () => {
                 {cartData.length>0?<div className={styles.cart__total__box}>
                     <div>
                         <p className={styles.cart__total}>${total}</p>
-                        <p className={styles.cart__balance}>Your balance: <span>{wallet}</span></p>
+                        <p className={styles.cart__balance}>Your balance: <span>{profileData? profileData.wallet : null}</span></p>
                     </div>
                     <div>
                         <button onClick={() => cleanCart()} className={styles.cart__button__clean}>Clean cart</button>

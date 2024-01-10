@@ -26,6 +26,12 @@ const Logout = () => {
             window.location.reload()
         } catch (error) {
             console.error('Error:', error.message);
+            swal({
+              title: "Error",
+              text: error.response.data.message,
+              icon: "error",
+              button: "Close",
+          });
         }
     }
 

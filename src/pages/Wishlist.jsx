@@ -7,8 +7,7 @@ import styles from '../styles/Wishlist.module.css'
 
 const Wishlist = () => {
     const [wishlistData, setWishlistData] = useState([])
-    const [updateWishlist, setUpdateWishlist] = useState(false)
-    const { token, setToken, wishlistNumber, setWishlistNumber, updateDataContext, setUpdateDataContext } = useAuth();
+    const { token, updateDataContext, setUpdateDataContext } = useAuth();
 
     useEffect(() => {
         const wishlistGetData = async() => {
@@ -24,7 +23,7 @@ const Wishlist = () => {
             }
         }
         wishlistGetData()
-    }, [updateWishlist])
+    }, [updateDataContext])
 
     const removeToWishlist = async (id) => {
         try {
@@ -33,10 +32,7 @@ const Wishlist = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            setUpdateWishlist(!updateWishlist)
-            const updateData = parseInt(wishlistNumber) - 1
-            setWishlistNumber(updateData)
-            setUpdateDataContext(updateDataContext => !updateDataContext)
+            setUpdateDataContext(!updateDataContext)
         } catch (error) {
             console.error('Error:', error.message);
         }

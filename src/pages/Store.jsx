@@ -10,7 +10,7 @@ import Atropos from 'atropos/react';
 
 const Store = () => {
     const [games, setGames] = useState([])
-    const {cartNumber, setCartNumber, wishlistNumber, apiUrl} = useAuth();
+    const {cartNumber, apiUrl, profileData, isLogged} = useAuth();
 
     useEffect(() => {
         const gamesData = async () => {
@@ -29,10 +29,12 @@ const Store = () => {
   return (
     <div className={styles.store__container}>
       <div className={styles.main__container}>
+        {isLogged? 
         <div className={styles.cart__wish__contain}>
           <Link to={'/cart'} className={styles.cart__icon}><span className={`material-symbols-outlined ${styles.cart}`}>shopping_cart</span><p>{cartNumber}</p></Link>
-          <Link to={'/profile/wishlist'} className={styles.wishlistNum}>Wishlist<span>({wishlistNumber})</span></Link>
+          <Link to={'/profile/wishlist'} className={styles.wishlistNum}>Wishlist<span>({profileData? profileData.wishlist.length : null})</span></Link>
         </div>
+        : null}
         <div className={styles.games__container}>
           {games ? (
           games.map((item) => {

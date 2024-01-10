@@ -10,9 +10,6 @@ export function AuthProvider({ children }) {
   const [isLogged, setIsLogged] = useState(localStorage.getItem('logged') || false)
   const [userId, setUserId] = useState(localStorage.getItem('userId') || null)
   const [cartNumber, setCartNumber] = useState(0)
-  const [wishlistNumber, setWishlistNumber] = useState(0)
-  const [backgroundOld, setBackgroundOld] = useState(localStorage.getItem('bg') || null)
-  const [wallet, setWallet] = useState(localStorage.getItem('wl') || null)
   const [profileData, setProfileData] = useState(null)
   const [updateDataContext, setUpdateDataContext] = useState(false)
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -67,7 +64,7 @@ export function AuthProvider({ children }) {
 
 
   return (
-    <AuthContext.Provider value={{ token, setToken, isLogged, setIsLogged, userId, setUserId, cartNumber, setCartNumber, wishlistNumber, setWishlistNumber, apiUrl, backgroundOld, setBackgroundOld, wallet, setWallet, profileData, updateDataContext, setUpdateDataContext}}>
+    <AuthContext.Provider value={{ token, setToken, isLogged, setIsLogged, userId, setUserId, cartNumber, setCartNumber, apiUrl, profileData, updateDataContext, setUpdateDataContext}}>
       {children}
     </AuthContext.Provider>
   );

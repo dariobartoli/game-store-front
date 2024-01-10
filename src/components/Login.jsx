@@ -26,17 +26,24 @@ const Login = ({onClose}) => {
           onClose()
           // Puedes redirigir al usuario a otra página después del inicio de sesión exitoso si es necesario
           // Por ejemplo, window.location.href = '/dashboard';
+          swal({
+            title: "Success",
+            text: response.data.message,
+            icon: "success",
+            button: "Close",
+          });
         })
         .catch(error => {
           console.error('Error de inicio de sesión:', error);
-          alert(error.response.data.message)
+          swal({
+            title: "Error",
+            text: error.response.data.message,
+            icon: "error",
+            button: "Close",
+        });
         });
     }
 
-
-    const toggleModal = () => {
-      onClose()
-    }
     
 
   return (

@@ -334,6 +334,12 @@
     scale: 0.9;
     transition: all 0.3s;
 }
+.game__mine{
+    color: rgb(209, 209, 209);
+    font-size: 0.9rem;
+    text-decoration: underline;
+    margin-top: 4px;
+}
 @media (min-width: 769px){
     .cover__image{
     width: 650px;

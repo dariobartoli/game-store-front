@@ -66,3 +66,7 @@
 .close__modal:hover{
     color: #3b3b3b;
 }
+.bad__password{
+    color: rgb(82, 82, 82);
+    font-size: 0.9rem;
+}

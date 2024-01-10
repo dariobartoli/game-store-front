@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
 import styles from '../styles/Profile.module.css'
+import swal from 'sweetalert';
 
 const Profile = () => {
   const [profile, setProfile] = useState(null)
@@ -10,7 +11,7 @@ const Profile = () => {
   const [requests, setRequests] = useState([])
   const [viewRequest, setViewRequest] = useState(false)
   const [deletedRequests, setDeletedRequests] = useState(JSON.parse(localStorage.getItem('deletedRequests')) || [])
-  const { token, setToken, wishlistNumber, cartNumber, apiUrl, backgroundOld, setBackgroundOld, wallet, setWallet } = useAuth();
+  const { token, cartNumber, apiUrl, profileData, updateDataContext, setUpdateDataContext} = useAuth();
   const [editModal, setEditModal] = useState(false)
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -35,13 +36,6 @@ const Profile = () => {
           }
         });
         setProfile(response.data.user);
-        if(backgroundOld == null){
-          setBackgroundOld(response.data.user.background)
-        }
-        if(wallet == null){
-          setWallet(response.data.user.wallet)
-          localStorage.setItem('wl', response.data.user.wallet);
-        }
       } catch (error) {
         console.error('Error:', error.response.data.message);
       }
@@ -132,6 +126,7 @@ const Profile = () => {
       setRequests(updatedRequests)
       const updateFriendList = [...friendList, id]
       setFriendList(updateFriendList)
+      setViewRequest(!viewRequest)
     } catch (error) {
       console.error('Error', error);
     }
@@ -147,35 +142,65 @@ const Profile = () => {
           'Content-Type': 'multipart/form-data',
         }
       })
-      alert(response.data.message)
       setProfile(response.data.user);
-      setFirstName("")
-      setLastName("")
-      setPassword("")
-      setNickName("")
-      setDescription("")
+      swal({
+        title: "Success",
+        text: response.data.message,
+        icon: "success",
+        button: "Close",
+      });
       setEditModal(!editModal)
     } catch (error) {
       console.error('Error', error);
-      alert(error.response.data.message)
+      swal({
+        title: "Error",
+        text: error.response.data.message,
+        icon: "error",
+        button: "Close",
+      });
     }
   }
 
-  const removeFriend = async(id)=> {
+  const removeFriend = (id)=> {
     try {
-      const response = await axios.delete(`${apiUrl}users/user/remove/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        }
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this friend request",
+        icon: "warning",
+        buttons: {
+          cancel: true,
+          confirm: true,
+          confirm: "Sure",
+        },
+        dangerMode: true,
       })
-      alert(response.data.message)
-      const updateFriendList = friendList.filter(item => item != id)
-      setFriendList(updateFriendList)
-      setShowFriend(!showFriend)
+      .then(async (willDelete) => {
+        if (willDelete) {
+          const response = await axios.delete(`${apiUrl}users/user/remove/${id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data',
+            }
+          })
+          const updateFriendList = friendList.filter(item => item != id)
+          setFriendList(updateFriendList)
+          setShowFriend(!showFriend)
+          swal({
+            title: "Success",
+            text: response.data.message,
+            icon: "success",
+            button: "Close",
+          });
+        }
+      });
     } catch (error) {
       console.error('Error', error);
-      alert(error.response.data.message)
+      swal({
+        title: "Error",
+        text: error.response.data.message,
+        icon: "error",
+        button: "Close",
+      });
     }
   }
 
@@ -188,22 +213,29 @@ const Profile = () => {
           'Authorization': `Bearer ${token}`,
         }
       })
-      const newBackground = response.data.background[0].url
-      setBackgroundOld(newBackground)
       setBackgroundShow(false)
-      localStorage.setItem('bg', newBackground);
-      alert(response.data.message)
+      setUpdateDataContext(!updateDataContext)
+      swal({
+        title: "Success",
+        text: response.data.message,
+        icon: "success",
+        button: "Close",
+      });
     } catch (error) {
       console.error('Error', error);
-      alert(error.response.data.message)
+      swal({
+        title: "Error",
+        text: error.response.data.message,
+        icon: "error",
+        button: "Close",
+      });
     }
   }
-
 
   return (
     <div className={styles.profile__container}>
       <div className={styles.main__container}>
-        <div className={styles.wallpaper} style={profile? {backgroundImage: `url(${backgroundOld})`} : null}>
+        <div className={styles.wallpaper} style={profileData ? {backgroundImage: `url(${profileData.background})`} : null}>
           <div className={styles.profile__data}>
             {profile ? (
               <div className={styles.profile__card}>
@@ -213,44 +245,51 @@ const Profile = () => {
                   <p>Last name: <span>{profile.lastName}</span></p>
                   <p>Email: <span>{profile.email}</span></p>
                   <p>Nick: <span>{profile.nickName}</span></p>
-                  <p>Wallet: <span>${wallet}</span> <span className={styles.add__funds}>ADD FUNDS</span></p>
-                  <button onClick={() => setBackgroundShow(!backgroundShow)}>cambiar balkground</button>
+                  <p>Wallet: <span>${profileData? profileData.wallet : null}</span> <span className={styles.add__funds}>ADD FUNDS</span></p>
+                  <button onClick={() => setBackgroundShow(!backgroundShow)} className={styles.changeBg}>Change background</button>
                 </div>
                 <span className={`material-symbols-outlined ${styles.edit__icon}`} onClick={()=> setEditModal(!editModal)}> edit</span>
               </div>
             ) : (<p>Loading...</p>)} {/* Muestra un mensaje de carga mientras se obtiene el perfil */}
 
 
-            <div className={styles.user__links__div}>
-              <span className="material-symbols-outlined" onClick={()=> setShowFriend(!showFriend)}>group</span>
-              <p onClick={()=> setShowFriend(!showFriend)}>Friends</p>
-              {showFriend? 
-                <div className={styles.friends__box}>
-                  <span className="material-symbols-outlined" onClick={()=> setShowFriend(!showFriend)}>close</span>
-                  {userFriends.length>0 ?userFriends.map(item => (
-                    <div key={item._id} className={styles.friends__card}>
-                      <Link to={`/user/${item._id}`}>
-                        <img src={item.profileImage} alt="" />
-                        <p>{item.nickName}</p>
-                      </Link>
-                      <span className="material-symbols-outlined" onClick={() =>  removeFriend(item._id)}>person_remove</span>
-                    </div>
-                  )): (<p>You don't have any friend</p>)}
-                </div>
-              : ""}
+            {profile && profile.description? <p className={styles.user__description}>{profile.description}</p> : <p className={styles.user__description}>Don't have description</p>}
+
+
+
+
+
+            <div className={styles.user__links__container}>
+              <div className={styles.user__links__div} onClick={()=> setShowFriend(!showFriend)}>
+                <span className="material-symbols-outlined">group</span>
+                <p onClick={()=> setShowFriend(!showFriend)}>Friends</p>
+                {showFriend? 
+                  <div className={styles.friends__box}>
+                    <span className="material-symbols-outlined" onClick={()=> setShowFriend(!showFriend)}>close</span>
+                    {userFriends.length>0 ?userFriends.map(item => (
+                      <div key={item._id} className={styles.friends__card}>
+                        <Link to={`/user/${item._id}`}>
+                          <img src={item.profileImage} alt="" />
+                          <p>{item.nickName}</p>
+                        </Link>
+                        <span className="material-symbols-outlined" onClick={() =>  removeFriend(item._id)}>person_remove</span>
+                      </div>
+                    )): (<p>You don't have any friend</p>)}
+                  </div>
+                : ""}
+              </div>
+              <Link to={'/library'} className={styles.user__links__div}>
+                <span className="material-symbols-outlined">casino</span>
+                <p>Games</p>
+              </Link>
+
+              <div className={styles.user__links__div} onClick={()=> setShowPublication(!showPublication)}>
+                <span className="material-symbols-outlined">list_alt</span>
+                <p>Publications</p>
+              </div>
+
+
             </div>
-            
-            <Link to={'/library'} className={styles.user__links__div}>
-              <span className="material-symbols-outlined">casino</span>
-              <p>Games</p>
-            </Link>
-
-            <div className={styles.user__links__div} onClick={()=> setShowPublication(!showPublication)}>
-            <span className="material-symbols-outlined">list_alt</span>
-            <p>Publications</p>
-            </div>
-
-
             {showPublication? 
               <div className={styles.publication__box}>
                 <span className="material-symbols-outlined" onClick={()=> setShowPublication(!showPublication)}>close</span>
@@ -278,30 +317,27 @@ const Profile = () => {
             : ""}
 
           
-            <div className={styles.links__container}>
-              <Link to={'/profile/wishlist'} className={styles.links__wishlist}>Wishlist <span>({wishlistNumber})</span></Link>
-              <Link to={'/cart'} className={styles.links__cart}><span className={`material-symbols-outlined ${styles.links__icon}`}>shopping_cart</span><p>{cartNumber}</p></Link>
-            </div>
+
             <div className={styles.request__div}>
-                <button onClick={() => setViewRequest(!viewRequest)} className={styles.request__button}>Friends Requests: <span>{requests.length}</span></button>
-                <div className={styles.request__div2}>
-                  {viewRequest? <div className={styles.request__div3}></div> : ""}
-                  {viewRequest ? <div className={styles.request__container}>
-                    {requests.length > 0 ? requests.map(data => ( 
-                      <div key={data._id} className={styles.request__card}>
-                        <div>
-                          <img src={data.profileImage} alt="" className={styles.request__image}/>
-                          <p>{data.nickName}</p>
-                        </div>
-                        <div>
-                          <span className={`material-symbols-outlined ${styles.request__accept}`} onClick={() => responseRequest(data._id, true)}>check</span>
-                          <span className={`material-symbols-outlined ${styles.request__deny}`} onClick={() => responseRequest(data._id, false)}>cancel</span>
-                        </div>
+              <button onClick={() => setViewRequest(!viewRequest)} className={styles.request__button}>Friends Requests: <span>{requests.length}</span></button>
+              <div className={styles.request__div2}>
+                {viewRequest? <div className={styles.request__div3}></div> : ""}
+                {viewRequest ? <div className={styles.request__container}>
+                  {requests.length > 0 ? requests.map(data => ( 
+                    <div key={data._id} className={styles.request__card}>
+                      <div>
+                        <img src={data.profileImage} alt="" className={styles.request__image}/>
+                        <p>{data.nickName}</p>
                       </div>
-                    )): (<p className={styles.request__text}>There is not any friend request</p>)}
-                  </div> : ""}
-                </div>
+                      <div>
+                        <span className={`material-symbols-outlined ${styles.request__accept}`} onClick={() => responseRequest(data._id, true)}>check</span>
+                        <span className={`material-symbols-outlined ${styles.request__deny}`} onClick={() => responseRequest(data._id, false)}>cancel</span>
+                      </div>
+                    </div>
+                  )): (<p className={styles.request__text}>There is not any friend request</p>)}
+                </div> : ""}
               </div>
+            </div>
           </div>
 
         </div>
@@ -311,12 +347,19 @@ const Profile = () => {
           <span className={`material-symbols-outlined`} onClick={()=> setEditModal(!editModal)}>close</span>
           <p>Modify where you want changes:</p>
           <form id="imageForm" encType="multipart/form-data" onSubmit={updateProfileData} className={styles.edit__form}>
-            <input type="text" placeholder='Change first name' onChange={e => setFirstName(e.target.value)}/>
-            <input type="text" placeholder='Change last name' onChange={e => setLastName(e.target.value)}/>
-            <input type="password" placeholder='Change password' onChange={e => setPassword(e.target.value)}/>
-            <input type="text" placeholder='Change nickname' onChange={e => setNickName(e.target.value)}/>
-            <input type="text" placeholder='Change description' onChange={e => setDescription(e.target.value)}/>
-            <input type="file" name="" id="fileInput" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
+            <div>
+              <input type="text" placeholder='Change first name' onChange={e => setFirstName(e.target.value)}/>
+              <input type="text" placeholder='Change last name' onChange={e => setLastName(e.target.value)}/>
+            </div>
+            <div>
+              <input type="password" placeholder='Change password' onChange={e => setPassword(e.target.value)}/>
+              <input type="text" placeholder='Change nickname' onChange={e => setNickName(e.target.value)}/>
+            </div>
+            <textarea name="" id="" cols="30" rows="10" placeholder='Change description' onChange={e => setDescription(e.target.value)}></textarea>
+            <label htmlFor="file-upload" className={styles.custom_file_upload}>
+              Select file
+            </label>
+            <input type="file" name="" id="file-upload" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
             <button type='submit'>Update</button>
           </form>
         </div>
@@ -365,14 +408,20 @@ const Profile = () => {
                 <input type="radio" name="back" id="back10" value={"bg10"} onChange={(e) => setBackgroundSelect(e.target.value)}/>
                 <img src="./img/wallpaper10.jpg" alt="Imagen 1" />
               </label>
-              <button onClick={handleBackground}>Cambiar</button>
-
             </form>
+            <button onClick={handleBackground}>Save</button>
 
           </div>
           : ""
         }
+
+
+        <div className={styles.links__container}>
+          <Link to={'/profile/wishlist'} className={styles.links__wishlist}>Wishlist <span>({profileData? profileData.wishlist.length : null})</span></Link>
+          <Link to={'/cart'} className={styles.links__cart}><span className={`material-symbols-outlined ${styles.links__icon}`}>shopping_cart</span><p>{cartNumber}</p></Link>
+        </div>
       </div>
+
     </div>
   )
 }
