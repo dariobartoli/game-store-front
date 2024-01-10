@@ -45,7 +45,6 @@ export function AuthProvider({ children }) {
         }
       };
       getProfileData();
-      wishlistNum();
       getCartData()
     }
 }, [token, updateDataContext])
