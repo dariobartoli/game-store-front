@@ -25,6 +25,10 @@ const Profile = () => {
   const [showPublication, setShowPublication] = useState(false)
   const [backgroundShow, setBackgroundShow] = useState(false)
   const [backgroundSelect, setBackgroundSelect] = useState(null)
+  const [fileClass, setFileClass] = useState(false)
+  const [loading, setLoading] = useState(false);
+
+
 
   
   useEffect(() => {
@@ -135,6 +139,7 @@ const Profile = () => {
 
   const updateProfileData = async(e) => {
     e.preventDefault()
+    setLoading(true)
     try {
       const response = await axios.put(`${apiUrl}users`, {imagen:image, firstName:firstName, lastName:lastName, password:password, nickName:nickName, description: description}, {
         headers: {
@@ -143,6 +148,11 @@ const Profile = () => {
         }
       })
       setProfile(response.data.user);
+      setFirstName('')
+      setLastName('')
+      setPassword('')
+      setNickName('')
+      setDescription('')
       swal({
         title: "Success",
         text: response.data.message,
@@ -150,6 +160,7 @@ const Profile = () => {
         button: "Close",
       });
       setEditModal(!editModal)
+      setLoading(false)
     } catch (error) {
       console.error('Error', error);
       swal({
@@ -232,9 +243,45 @@ const Profile = () => {
     }
   }
 
+  function displayFileName() {
+    const fileInput = document.getElementById('file-upload');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const fileInputLabel = document.getElementById('fileInputLabel');
+
+    if (fileInput.files.length > 0) {
+        const fileName = fileInput.files[0].name;
+        setImage(fileInput.files[0])
+        fileNameDisplay.textContent = `Selected file: ${fileName}`;
+        setFileClass(true)
+    } else {
+        fileNameDisplay.textContent = '';
+        setFileClass(false)
+    }
+  }
+
+  const handleEditModal = () => {
+    const fileNameDisplay = document.getElementById('fileNameDisplay'); 
+    fileNameDisplay.textContent = ''
+    setFileClass(false)
+    setEditModal(!editModal)
+  }
+
   return (
     <div className={styles.profile__container}>
       <div className={styles.main__container}>
+        {loading?
+          <div className='spinner__container'>
+              <div class="spinner">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+              </div>
+              <h4>Processing request</h4>
+          </div>
+        : null}
         <div className={styles.wallpaper} style={profileData ? {backgroundImage: `url(${profileData.background})`} : null}>
           <div className={styles.profile__data}>
             {profile ? (
@@ -248,7 +295,7 @@ const Profile = () => {
                   <p>Wallet: <span>${profileData? profileData.wallet : null}</span> <span className={styles.add__funds}>ADD FUNDS</span></p>
                   <button onClick={() => setBackgroundShow(!backgroundShow)} className={styles.changeBg}>Change background</button>
                 </div>
-                <span className={`material-symbols-outlined ${styles.edit__icon}`} onClick={()=> setEditModal(!editModal)}> edit</span>
+                <span className={`material-symbols-outlined ${styles.edit__icon}`} onClick={handleEditModal}> edit</span>
               </div>
             ) : (<p>Loading...</p>)} {/* Muestra un mensaje de carga mientras se obtiene el perfil */}
 
@@ -348,18 +395,21 @@ const Profile = () => {
           <p>Modify where you want changes:</p>
           <form id="imageForm" encType="multipart/form-data" onSubmit={updateProfileData} className={styles.edit__form}>
             <div>
-              <input type="text" placeholder='Change first name' onChange={e => setFirstName(e.target.value)}/>
-              <input type="text" placeholder='Change last name' onChange={e => setLastName(e.target.value)}/>
+              <input type="text" placeholder='Change first name' value={firstName} onChange={e => setFirstName(e.target.value)}/>
+              <input type="text" placeholder='Change last name' value={lastName} onChange={e => setLastName(e.target.value)}/>
             </div>
             <div>
-              <input type="password" placeholder='Change password' onChange={e => setPassword(e.target.value)}/>
-              <input type="text" placeholder='Change nickname' onChange={e => setNickName(e.target.value)}/>
+              <input type="password" placeholder='Change password' value={password} onChange={e => setPassword(e.target.value)}/>
+              <input type="text" placeholder='Change nickname' value={nickName} onChange={e => setNickName(e.target.value)}/>
             </div>
-            <textarea name="" id="" cols="30" rows="10" placeholder='Change description' onChange={e => setDescription(e.target.value)}></textarea>
-            <label htmlFor="file-upload" className={styles.custom_file_upload}>
-              Select file
-            </label>
-            <input type="file" name="" id="file-upload" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
+            <textarea name="" id="" cols="30" rows="10" placeholder='Change description' value={description} onChange={e => setDescription(e.target.value)}></textarea>
+            <div className={styles.fileselect}>
+              <label htmlFor="file-upload" id='fileInputLabel' className={styles.custom_file_upload}>
+                Select file
+              </label>
+              <span id="fileNameDisplay" className={`${fileClass? styles.fileNameDisplay : null}`}></span>
+            </div>
+            <input type="file" name="" id="file-upload" accept="image/*" onChange={displayFileName}/>
             <button type='submit'>Update</button>
           </form>
         </div>

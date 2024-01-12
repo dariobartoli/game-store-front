@@ -54,7 +54,7 @@ const Register = ({onClose}) => {
             <input type="password" id='password' value={password} onChange={e => setPassword(e.target.value)}/>
           </div>
           <div>
-            <p className={styles.bad__password}>Password must contain (minus, mayus, number), 8 characters minimum</p>
+            <p className={styles.bad__password}> [Email can be fake, password min 6 character.]</p>
           </div>
         </div>
         <input type="submit" value="Register" onClick={registerInApp} className={styles.button__register}/>

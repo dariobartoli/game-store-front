@@ -313,7 +313,7 @@
 }
 .review__modal>div>button:hover{
     background-color: #fe4c2c;
-    border-color: #fe4c2c;
+    border-color: #ff3c19;
     transition: 0.3s;
     font-size: 0.9rem;
 }

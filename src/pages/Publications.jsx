@@ -17,6 +17,8 @@ const Publications = () => {
     const [description, setDescription] = useState("")
     const [image, setImage] = useState("")
     const [authorInfo, setAuthorInfo] = useState(null)
+    const [fileClass, setFileClass] = useState(false)
+    const [loading, setLoading] = useState(false);
 
 
     
@@ -111,6 +113,7 @@ const Publications = () => {
     const createPublish = async(e) => {
         try {
             e.preventDefault()
+            setLoading(true); 
             const response = await axios.post(`${apiUrl}publications`, {images: image, title: title, text: description}, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -118,6 +121,12 @@ const Publications = () => {
                 }
             })
             setReload(!reload)
+            setTitle('')
+            setDescription('')
+            const fileNameDisplay = document.getElementById('fileNameDisplay'); 
+            fileNameDisplay.textContent = ''
+            setFileClass(false)
+            setLoading(false)
             swal({
                 title: "Success",
                 text: response.data.message,
@@ -254,17 +263,49 @@ const Publications = () => {
         }
       }
 
+    function displayFileName() {
+        const fileInput = document.getElementById('file-upload');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const fileInputLabel = document.getElementById('fileInputLabel');
+    
+        if (fileInput.files.length > 0) {
+            const fileName = fileInput.files[0].name;
+            setImage(fileInput.files[0])
+            fileNameDisplay.textContent = `Selected file: ${fileName}`;
+            setFileClass(true)
+        } else {
+            fileNameDisplay.textContent = '';
+            setFileClass(false)
+        }
+    }
+
   return (
     <div className={styles.publication__container}>
         <div className={styles.main__container}>
+            {loading?
+                <div className='spinner__container'>
+                    <div class="spinner">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <h4>Processing request</h4>
+                </div>
+            : null}
             <h2>SHARE YOUR FAVORITES ADVENTURES</h2>
             <form id="publicationForm" encType="multipart/form-data" onSubmit={createPublish} className={styles.publication__form}>
-                <input type="text" placeholder='Title' id="title" onChange={e => setTitle(e.target.value)}/>
-                <textarea name="" id="description" cols="30" rows="10" onChange={e => setDescription(e.target.value)} className={styles.form__textarea} placeholder='description'></textarea>
-                <label htmlFor="file-upload" className={styles.custom_file_upload}>
-                    Select file
-                </label>
-                <input type="file" id="file-upload" accept="image/*" onChange={e => setImage(e.target.files[0])}/>
+                <input type="text" placeholder='Title' id="title" value={title} onChange={e => setTitle(e.target.value)}/>
+                <textarea name="" id="description" cols="30" rows="10" value={description} onChange={e => setDescription(e.target.value)} className={styles.form__textarea} placeholder='description'></textarea>
+                <div>
+                    <label htmlFor="file-upload" id='fileInputLabel' className={styles.custom_file_upload}>
+                        Select file
+                    </label>
+                    <span id="fileNameDisplay" className={`${fileClass? styles.fileNameDisplay : null}`}></span>
+                </div>
+                <input type="file" id="file-upload" accept="image/*" onChange={displayFileName}/>
                 <button type='submit'>Publish</button>
             </form>
             <div className={styles.publication__box}>

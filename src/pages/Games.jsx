@@ -126,6 +126,7 @@ const Games = () => {
                 }
             })
             setReviewModal(!reviewModal)
+            setReviewText('')
             swal({
                 title: "Success",
                 text: response.data.message,
@@ -180,6 +181,20 @@ const Games = () => {
                 button: "Close",
                 });
         }
+    }
+
+    const handleModalAddReview = () => {
+        const valor = profileData.games.includes(game._id)
+        console.log(valor);
+        if(!valor) {
+            swal({
+                title: "Error",
+                text: "You don't have this game for make a review",
+                icon: "error",
+                button: "Close",
+                });
+        }
+        else return setReviewModal(!reviewModal)
     }
     
 
@@ -241,7 +256,7 @@ const Games = () => {
                         </div>
                         <div className={styles.review__title__container}>
                             <h2 className={styles.subtitles}>Reviews:</h2>
-                            <button className={styles.button__review} onClick={()=> setReviewModal(!reviewModal)}>Add Review</button>
+                            <button className={styles.button__review} onClick={handleModalAddReview}>Add Review</button>
                         </div>
                         <div className={styles.review__container}>
                             {reviews.length > 0 ? reviews.map((item, index) => (
@@ -274,7 +289,7 @@ const Games = () => {
             </div>
             <div className={`${styles.review__modal} ${reviewModal? styles.review__modal__view : ""}`}>
                 <span className="material-symbols-outlined" onClick={()=> setReviewModal(!reviewModal)}>close</span>
-                <textarea name="review" id="review" cols="30" rows="12" className={styles.review__textarea} placeholder="Write your review here..." onChange={e => setReviewText(e.target.value)}></textarea>
+                <textarea name="review" id="review" cols="30" rows="12" value={reviewText} className={styles.review__textarea} placeholder="Write your review here..." onChange={e => setReviewText(e.target.value)}></textarea>
                 <div>
                     <select name="recommended" id="recommended" className={styles.review__select} onChange={e => setReviewRecommended(e.target.value)}>
                         <option value={true}>Recommended</option>

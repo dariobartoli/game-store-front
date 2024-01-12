@@ -47,9 +47,12 @@
     right: 10px;
     font-size: 1.5rem;
     cursor: pointer;
+    transition: all 0.3s;
 }
 .close__modal:hover{
-    color: #3b3b3b;
+    color: white;
+    scale: 0.9;
+    transition: all 0.3s;
 }
 .button__container{
     display: flex;

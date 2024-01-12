@@ -4,6 +4,7 @@
     display: flex;
     justify-content: center;
     color: white;
+    position: relative;
 }
 
 .main__container{
@@ -245,7 +246,7 @@
 }
 .publication__form button:hover{
     background-color: #fe4c2c;
-    border-color: #fe4c2c;
+    border-color: #ff3c19;
     transition: 0.5s;
     font-size: 0.9rem;
 }
@@ -357,7 +358,14 @@
     scale: 1.05;
     transition: 0.2s;
 }
-
+.publication__form>div{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    flex-wrap: wrap;
+    word-wrap: break-word;
+}
 .custom_file_upload {
     display: inline-block;
     cursor: pointer;
@@ -375,7 +383,19 @@
 .custom_file_upload:hover{
     background-color: #fe4c2c;
     transition: 0.5s;
-    border-color: #fe4c2c;
+    border-color: #ff3c19;
+}
+.fileNameDisplay {
+    display: block;
+    font-size: 1rem;
+    font-weight: 100;
+    background-color: rgba(255, 255, 255, 0.486);
+    padding: 2px;
+    border-radius: 2px;
+    word-wrap: break-word;
+    overflow: hidden;
+    width: 100%;
+    max-width: 370px;
 }
 
 @media (min-width: 768px){
@@ -390,6 +410,9 @@
     }
     .newcomment__box>textarea{
         width: 86%;
+    }
+    .publication__form>div{
+        flex-wrap: nowrap;
     }
 
 }

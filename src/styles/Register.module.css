@@ -62,11 +62,14 @@
     top: 3px;
     right: 5px;
     cursor: pointer;
+    transition: all 0.3s;
 }
 .close__modal:hover{
-    color: #3b3b3b;
+    color: white;
+    scale: 0.9;
+    transition: all 0.3s;
 }
 .bad__password{
-    color: rgb(82, 82, 82);
+    color: rgb(59, 59, 59);
     font-size: 0.9rem;
 }
